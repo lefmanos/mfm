@@ -1,0 +1,7 @@
+{
+  "name": "mfm",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
