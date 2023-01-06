@@ -28,6 +28,7 @@ export class Tab3Page {
             await this.dataService.addCategories(newCat);
             await this.loadCategories();
             console.log(this.categoryList);
+            this.newCategoryForm.reset();
 
         } else if (this.newCategoryForm.status == 'INVALID') {
             console.log('invalid input');
