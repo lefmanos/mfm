@@ -59,6 +59,16 @@ export class DataService {
 
     private loadTransactions() {
         this.getData(TRANSACTIONS).subscribe(res => {
+            res.sort(function(a : any, b : any) {
+                if (a["date"] > b["date"]) {
+                    return 1;
+                }
+
+                if (a["date"] < b["date"]) {
+                    return -1;
+                }
+                return 0;
+            });
             this.transactionsSource.next(res);
         });
     }

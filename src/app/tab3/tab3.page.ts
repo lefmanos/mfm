@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DataService } from '../services/data.service';
+import { format, parseISO } from 'date-fns';
 
 @Component({
     selector: 'app-tab3',
@@ -46,6 +47,7 @@ export class Tab3Page {
     }
 
     printList() {
-        console.log(this.categoryList);
+        var datenow = (new Date(Date.now())).toISOString();
+        console.log(format(parseISO(datenow), 'yyyy-MM-dd-hh'));
     }
 }

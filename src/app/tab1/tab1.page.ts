@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DataService } from '../services/data.service';
+import { format, parseISO } from 'date-fns';
 
 @Component({
     selector: 'app-tab1',
@@ -16,7 +17,7 @@ export class Tab1Page {
     ) { }
     
     newTransactionForm = this.formBuilder.group({
-        date: ['', Validators.required],
+        date: [null],
         category: ['', Validators.required],
         amount: [0, Validators.required],
         notes: ['']
@@ -28,7 +29,18 @@ export class Tab1Page {
 
     async onSubmit(): Promise<void> {
         if (this.newTransactionForm.status == 'VALID') {
-            console.log(this.newTransactionForm.value);
+
+            let datenow = this.newTransactionForm.value["date"] || (new Date(Date.now())).toISOString();
+            datenow = format(parseISO(datenow), 'yyyy-MM-dd');
+            console.log(datenow);
+            let newTransaction = { 
+                date: datenow,
+                category:   this.newTransactionForm.value["category"],
+                amount:     this.newTransactionForm.value["amount"],
+                notes:      this.newTransactionForm.value["notes"]
+            }
+            console.log(newTransaction);
+            await this.dataService.addTransactions(newTransaction);
             this.newTransactionForm.reset();
         } else {
             console.log('Invalid input');

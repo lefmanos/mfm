@@ -7,11 +7,21 @@ import { DataService } from '../services/data.service';
     styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page {
-    listTransactions = [];
-    listTransactionsTest = ["adf asd  sdf sdf ", "adfsd", " sdkfjslkflk slkdf jklj  sflkdj"];
+    transactionList = [];
 
     constructor(private dataService: DataService) {
     }
 
+    async ngOnInit(){
+        this.dataService.transactionList.subscribe(list => this.transactionList = list)
+    }
+
+    printSum() {
+        let sum = 0;
+        for (let tr of this.transactionList) {
+            sum += tr["amount"];
+        }
+        console.log('sum: ', sum);
+    }
 
 }

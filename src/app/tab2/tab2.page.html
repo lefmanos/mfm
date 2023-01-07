@@ -14,9 +14,10 @@
   </ion-header>
 
   <ion-list>
-      <ion-item *ngFor="let item of listTransactions; let index">
-          <ion-label>{{ item }}</ion-label>
+      <ion-item *ngFor="let item of transactionList; let index">
+          <ion-label>{{ item["date"] }}{{item["category"]}} {{item["amount"] }}</ion-label>
       </ion-item>
   </ion-list>
 
+  <ion-button (click)="printSum()">PrintSum</ion-button>
 </ion-content>

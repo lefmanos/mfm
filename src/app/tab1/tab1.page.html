@@ -15,6 +15,7 @@
   </ion-header>
 
   <form [formGroup]="newTransactionForm" triggerAction="click" (ngSubmit)="onSubmit()">
+      <ion-item>
       <ion-datetime-button datetime="datetime"></ion-datetime-button>
 
       <ion-modal [keepContentsMounted]="true">
@@ -27,6 +28,7 @@
               </ion-datetime>
           </ng-template>
       </ion-modal>
+      </ion-item>
 
       <ion-list>
           <ion-item>
