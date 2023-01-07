@@ -7,12 +7,52 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Tab 1</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <ion-datetime locale="en-GB" presentation="date"></ion-datetime>
+  <form [formGroup]="newTransactionForm" triggerAction="click" (ngSubmit)="onSubmit()">
+      <ion-datetime-button datetime="datetime"></ion-datetime-button>
+
+      <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+              <ion-datetime id="datetime"
+                            locale="en-GB" 
+                            presentation="date" 
+                            formControlName="date"
+                            >
+              </ion-datetime>
+          </ng-template>
+      </ion-modal>
+
+      <ion-list>
+          <ion-item>
+              <ion-select interface="popover" formControlName="category" placeholder="Select Category">
+                  <ion-select-option  *ngFor="let item of categoryList; let i = index;" value="{{ item}}">{{ item }}</ion-select-option>
+              </ion-select>
+          </ion-item>
+      </ion-list>
+
+      <ion-item>
+          <ion-label>Amount</ion-label>
+          <ion-input 
+              type="number" 
+              placeholder="0.00"
+              formControlName="amount"
+              ></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <ion-label>Note</ion-label>
+          <ion-input formControlName="notes"></ion-input>
+      </ion-item>
+
+      <ion-button type="submit">
+          <ion-icon name="add"></ion-icon>
+      </ion-button>
+  </form>
 
 </ion-content>

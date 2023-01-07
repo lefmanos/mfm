@@ -15,6 +15,10 @@ const CATEGORIES = 'categories'
 })
 export class DataService {
     private storageReady = new BehaviorSubject(false);
+    private categorySource = new BehaviorSubject([]);
+    private transactionsSource = new BehaviorSubject([]);
+    categoryList = this.categorySource.asObservable();
+    transactionList = this.transactionsSource.asObservable();
 
     constructor(private storage: Storage) { 
     }
@@ -23,23 +27,49 @@ export class DataService {
         await this.storage.defineDriver(CordovaSQLiteDriver);
         await this.storage.create();
         this.storageReady.next(true);
+        this.loadAll();
     }
 
-    getTransactions() {
-        return this.getData(TRANSACTIONS);
+    async addCategories(item: any) {
+        await this.addData(CATEGORIES, item);
+        this.loadCategories();
     }
 
-    getCategories() {
-        return this.getData(CATEGORIES);
+    async removeCategory(index: number) {
+        await this.removeItem(CATEGORIES, index);
+        this.loadCategories();
     }
 
-    addCategories(item: any) {
-        return this.addData(CATEGORIES, item);
+    async addTransactions(item: any) {
+        await this.addData(TRANSACTIONS, item)
+        this.loadTransactions();
     }
 
-    addTransactions(item: any) {
-        return this.addData(TRANSACTIONS, item)
+    async removeTransaction(index: number) {
+        await this.removeItem(TRANSACTIONS, index);
+        this.loadTransactions();
     }
+
+    /* shared data helpers */
+
+    private loadAll() {
+        this.loadCategories();
+        this.loadTransactions();
+    }
+
+    private loadTransactions() {
+        this.getData(TRANSACTIONS).subscribe(res => {
+            this.transactionsSource.next(res);
+        });
+    }
+
+    private loadCategories() {
+        this.getData(CATEGORIES).subscribe(res => {
+            this.categorySource.next(res);
+        });
+    }
+
+    /* database API */
 
     private getData(key: string) {
         return this.storageReady.pipe(
@@ -60,13 +90,8 @@ export class DataService {
     async clearData() {
         console.log('Clearing database');
         this.storage.clear();
+        this.loadAll();
         console.log('Done clearing database');
-    }
-
-    async removeCategory(index: number) {
-        console.log('Removing ', index, ' item');
-        await this.removeItem(CATEGORIES, index);
-        console.log('Done removing ', index, ' item');
     }
 
     async removeItem(key: string, index: number) {

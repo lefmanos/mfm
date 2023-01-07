@@ -11,14 +11,7 @@ export class Tab2Page {
     listTransactionsTest = ["adf asd  sdf sdf ", "adfsd", " sdkfjslkflk slkdf jklj  sflkdj"];
 
     constructor(private dataService: DataService) {
-        this.loadTransaction();
     }
 
-    async loadTransaction() {
-        this.dataService.getTransactions().subscribe(res => {
-            this.listTransactions = res;
-        });
-
-    }
 
 }

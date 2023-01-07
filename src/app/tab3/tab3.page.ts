@@ -13,8 +13,10 @@ export class Tab3Page {
     constructor(
         private dataService: DataService,
         private formBuilder: FormBuilder
-    ) {
-        this.loadCategories();
+    ) { }
+
+    ngOnInit() {
+        this.dataService.categoryList.subscribe(list => this.categoryList = list)
     }
 
     newCategoryForm = this.formBuilder.group({
@@ -26,7 +28,6 @@ export class Tab3Page {
             let newCat = this.newCategoryForm.value["categoryName"];
             console.log(newCat);
             await this.dataService.addCategories(newCat);
-            await this.loadCategories();
             console.log(this.categoryList);
             this.newCategoryForm.reset();
 
@@ -38,24 +39,13 @@ export class Tab3Page {
 
     async removeCategory(i : number): Promise<void> {
         await this.dataService.removeCategory(i);
-        await this.loadCategories();
-    }
-
-    async loadCategories() {
-        this.dataService.getCategories().subscribe(res => {
-            this.categoryList = res;
-        });
     }
 
     async clearData() {
         await this.dataService.clearData();
-        await this.loadCategories();
     }
 
     printList() {
         console.log(this.categoryList);
-    }
-    async updateCategories(index: number, item: string) {
-        return item;
     }
 }
