@@ -8,16 +8,19 @@ import { filter } from 'rxjs/operators';
 
 
 const TRANSACTIONS = 'transactions'
-const CATEGORIES = 'categories'
+const EXPENSECAT = 'expence_categories'
+const INCOMECAT = 'income_categories'
 
 @Injectable({
     providedIn: 'root'
 })
 export class DataService {
     private storageReady = new BehaviorSubject(false);
-    private categorySource = new BehaviorSubject([]);
+    private expenseCategorySource = new BehaviorSubject([]);
+    private incomeCategorySource = new BehaviorSubject([]);
     private transactionsSource = new BehaviorSubject([]);
-    categoryList = this.categorySource.asObservable();
+    expenseCategoryList = this.expenseCategorySource.asObservable();
+    incomeCategoryList = this.incomeCategorySource.asObservable();
     transactionList = this.transactionsSource.asObservable();
 
     constructor(private storage: Storage) { 
@@ -30,13 +33,23 @@ export class DataService {
         this.loadAll();
     }
 
-    async addCategories(item: any) {
-        await this.addData(CATEGORIES, item);
+    async addIncomeCategory(item: any) {
+        await this.addData(INCOMECAT, item);
         this.loadCategories();
     }
 
-    async removeCategory(index: number) {
-        await this.removeItem(CATEGORIES, index);
+    async removeIncomeCategory(index: number) {
+        await this.removeItem(INCOMECAT, index);
+        this.loadCategories();
+    }
+
+    async addExpenseCategory(item: any) {
+        await this.addData(EXPENSECAT, item);
+        this.loadCategories();
+    }
+
+    async removeExpenseCategory(index: number) {
+        await this.removeItem(EXPENSECAT, index);
         this.loadCategories();
     }
 
@@ -59,23 +72,28 @@ export class DataService {
 
     private loadTransactions() {
         this.getData(TRANSACTIONS).subscribe(res => {
-            res.sort(function(a : any, b : any) {
-                if (a["date"] > b["date"]) {
-                    return 1;
-                }
+            if (res != null) {
+                res.sort( function(a : any, b : any) {
+                    if (a["date"] > b["date"]) {
+                        return 1;
+                    }
 
-                if (a["date"] < b["date"]) {
-                    return -1;
-                }
-                return 0;
-            });
+                    if (a["date"] < b["date"]) {
+                        return -1;
+                    }
+                    return 0;
+                });
+            }
             this.transactionsSource.next(res);
         });
     }
 
     private loadCategories() {
-        this.getData(CATEGORIES).subscribe(res => {
-            this.categorySource.next(res);
+        this.getData(EXPENSECAT).subscribe(res => {
+            this.expenseCategorySource.next(res);
+        });
+        this.getData(INCOMECAT).subscribe(res => {
+            this.incomeCategorySource.next(res);
         });
     }
 

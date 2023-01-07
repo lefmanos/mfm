@@ -10,26 +10,32 @@ import { format, parseISO } from 'date-fns';
 })
 export class Tab3Page {
 
-    categoryList : string[] = [];
+    expenseCategoryList : string[] = [];
+    incomeCategoryList : string[] = [];
     constructor(
         private dataService: DataService,
         private formBuilder: FormBuilder
     ) { }
 
     ngOnInit() {
-        this.dataService.categoryList.subscribe(list => this.categoryList = list)
+        this.dataService.expenseCategoryList.subscribe(list => this.expenseCategoryList = list)
+        this.dataService.incomeCategoryList.subscribe(list => this.incomeCategoryList = list)
     }
 
     newCategoryForm = this.formBuilder.group({
         categoryName: ['', Validators.required]
     });
 
-    async onSubmit(): Promise<void> {
+    async onSubmit(isExpense : boolean): Promise<void> {
         if (this.newCategoryForm.status == 'VALID') {
             let newCat = this.newCategoryForm.value["categoryName"];
             console.log(newCat);
-            await this.dataService.addCategories(newCat);
-            console.log(this.categoryList);
+            if (isExpense) {
+                await this.dataService.addExpenseCategory(newCat);
+            } else {
+                await this.dataService.addIncomeCategory(newCat);
+            }
+            console.log(this.expenseCategoryList);
             this.newCategoryForm.reset();
 
         } else if (this.newCategoryForm.status == 'INVALID') {
@@ -38,8 +44,12 @@ export class Tab3Page {
 
     }
 
-    async removeCategory(i : number): Promise<void> {
-        await this.dataService.removeCategory(i);
+    async removeExpenseCategory(i : number): Promise<void> {
+        await this.dataService.removeExpenseCategory(i);
+    }
+
+    async removeIncomeCategory(i : number): Promise<void> {
+        await this.dataService.removeIncomeCategory(i);
     }
 
     async clearData() {

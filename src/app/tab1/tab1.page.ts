@@ -10,7 +10,8 @@ import { format, parseISO } from 'date-fns';
 })
 export class Tab1Page {
 
-    categoryList : string[] = [];
+    expenseCategoryList : string[] = [];
+    incomeCategoryList : string[] = [];
     constructor(
         private dataService: DataService,
         private formBuilder: FormBuilder
@@ -24,7 +25,8 @@ export class Tab1Page {
     });
 
     async ngOnInit(){
-        this.dataService.categoryList.subscribe(list => this.categoryList = list)
+        this.dataService.expenseCategoryList.subscribe(list => this.expenseCategoryList = list)
+        this.dataService.incomeCategoryList.subscribe(list => this.incomeCategoryList = list)
     }
 
     async onSubmit(): Promise<void> {
