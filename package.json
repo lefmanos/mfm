@@ -72,7 +72,7 @@
     "typescript": "~4.8.4"
   },
   "description": "An Ionic project",
-  "scarfSettings.enable" : false,
+  "scarfSettings.enable": false,
   "cordova": {
     "plugins": {
       "cordova-plugin-statusbar": {},
@@ -80,6 +80,9 @@
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {}
-    }
+    },
+    "platforms": [
+      "android"
+    ]
   }
 }
