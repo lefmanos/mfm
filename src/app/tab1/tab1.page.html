@@ -13,48 +13,71 @@
       <ion-title size="large">Tab 1</ion-title>
     </ion-toolbar>
   </ion-header>
-
   <form [formGroup]="newTransactionForm" triggerAction="click" (ngSubmit)="onSubmit()">
-      <ion-item>
-      <ion-datetime-button datetime="datetime"></ion-datetime-button>
+      <ion-grid>
 
-      <ion-modal [keepContentsMounted]="true">
-          <ng-template>
-              <ion-datetime id="datetime"
-                            locale="en-GB" 
-                            presentation="date" 
-                            formControlName="date"
-                            >
-              </ion-datetime>
-          </ng-template>
-      </ion-modal>
-      </ion-item>
+          <ion-row>
+              <ion-col>
+                  <ion-item>
+                      <ion-datetime-button datetime="datetime"></ion-datetime-button>
 
-      <ion-list>
-          <ion-item>
-              <ion-select interface="popover" formControlName="category" placeholder="Select Category">
-                  <ion-select-option  *ngFor="let item of expenseCategoryList; let i = index;" value="{{ item}}">{{ item }}</ion-select-option>
-              </ion-select>
-          </ion-item>
-      </ion-list>
+                      <ion-modal [keepContentsMounted]="true">
+                          <ng-template>
+                              <ion-datetime id="datetime"
+                                            locale="en-GB" 
+                                            presentation="date" 
+                                            formControlName="date"
+                                            >
+                              </ion-datetime>
+                          </ng-template>
+                      </ion-modal>
+                  </ion-item>
+              </ion-col>
+          </ion-row>
 
-      <ion-item>
-          <ion-label>Amount</ion-label>
-          <ion-input 
-              type="number" 
-              placeholder="0.00"
-              formControlName="amount"
-              ></ion-input>
-      </ion-item>
+          <ion-row>
+              <ion-col>
+                  <ion-list>
+                      <ion-item>
+                          <ion-select interface="popover" formControlName="category">
+                              <ion-select-option  *ngFor="let item of expenseCategoryList; let i = index;" value="{{ item}}">{{ item }}</ion-select-option>
+                          </ion-select>
+                      </ion-item>
+                  </ion-list>
+              </ion-col>
+              <ion-col>
+                  <ion-list>
+                      <ion-item>
+                          <ion-select interface="popover" formControlName="account">
+                              <ion-select-option  *ngFor="let item of accountList; let i = index;" value="{{ item}}">{{ item }}</ion-select-option>
+                          </ion-select>
+                      </ion-item>
+                  </ion-list>
+              </ion-col>
+          </ion-row>
 
-      <ion-item>
-          <ion-label>Note</ion-label>
-          <ion-input formControlName="notes"></ion-input>
-      </ion-item>
+          <ion-row>
+              <ion-item>
+                  <ion-label>Amount</ion-label>
+                  <ion-input type="number" placeholder="0.00" formControlName="amount" ></ion-input>
+              </ion-item>
+          </ion-row>
 
-      <ion-button type="submit">
-          <ion-icon name="add"></ion-icon>
-      </ion-button>
+          <ion-row>
+              <ion-col>
+                  <ion-item>
+                      <ion-label>Note</ion-label>
+                      <ion-input formControlName="notes"></ion-input>
+                  </ion-item>
+              </ion-col>
+
+              <ion-col>
+                  <ion-button type="submit">
+                      <ion-icon name="add"></ion-icon>
+                  </ion-button>
+              </ion-col>
+          </ion-row>
+      </ion-grid>
   </form>
 
 </ion-content>

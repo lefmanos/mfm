@@ -5,11 +5,12 @@ import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 import { BehaviorSubject, from, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { filter } from 'rxjs/operators';
-
+import { transaction, compareTransaction } from './transaction.interface';
 
 const TRANSACTIONS = 'transactions'
 const EXPENSECAT = 'expence_categories'
 const INCOMECAT = 'income_categories'
+const ACCOUNTS = 'accounts'
 
 @Injectable({
     providedIn: 'root'
@@ -18,10 +19,12 @@ export class DataService {
     private storageReady = new BehaviorSubject(false);
     private expenseCategorySource = new BehaviorSubject([]);
     private incomeCategorySource = new BehaviorSubject([]);
-    private transactionsSource = new BehaviorSubject([]);
+    private transactionsSource = new BehaviorSubject([] as transaction[]);
+    private accountsSource = new BehaviorSubject([]);
     expenseCategoryList = this.expenseCategorySource.asObservable();
     incomeCategoryList = this.incomeCategorySource.asObservable();
     transactionList = this.transactionsSource.asObservable();
+    accountList = this.accountsSource.asObservable();
 
     constructor(private storage: Storage) { 
     }
@@ -29,11 +32,25 @@ export class DataService {
     async init() {
         await this.storage.defineDriver(CordovaSQLiteDriver);
         await this.storage.create();
+        this.loadAll();
         this.storageReady.next(true);
+    }
+
+    async ngOnInit(){
         this.loadAll();
     }
 
-    async addIncomeCategory(item: any) {
+    async addAccount(item: string) {
+        await this.addData(ACCOUNTS, item);
+        this.loadAccounts();
+    }
+
+    async removeAccount(index: number) {
+        await this.removeItem(ACCOUNTS, index);
+        this.loadAccounts();
+    }
+
+    async addIncomeCategory(item: string) {
         await this.addData(INCOMECAT, item);
         this.loadCategories();
     }
@@ -43,7 +60,7 @@ export class DataService {
         this.loadCategories();
     }
 
-    async addExpenseCategory(item: any) {
+    async addExpenseCategory(item: string) {
         await this.addData(EXPENSECAT, item);
         this.loadCategories();
     }
@@ -53,7 +70,7 @@ export class DataService {
         this.loadCategories();
     }
 
-    async addTransactions(item: any) {
+    async addTransactions(item: transaction) {
         await this.addData(TRANSACTIONS, item)
         this.loadTransactions();
     }
@@ -67,22 +84,19 @@ export class DataService {
 
     private loadAll() {
         this.loadCategories();
+        this.loadAccounts();
         this.loadTransactions();
     }
 
+    private loadAccounts() {
+        this.getData(ACCOUNTS).subscribe(res => {
+            this.accountsSource.next(res);
+        });
+    }
     private loadTransactions() {
         this.getData(TRANSACTIONS).subscribe(res => {
             if (res != null) {
-                res.sort( function(a : any, b : any) {
-                    if (a["date"] > b["date"]) {
-                        return 1;
-                    }
-
-                    if (a["date"] < b["date"]) {
-                        return -1;
-                    }
-                    return 0;
-                });
+                res.sort(compareTransaction);
             }
             this.transactionsSource.next(res);
         });

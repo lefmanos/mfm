@@ -12,36 +12,51 @@ export class Tab3Page {
 
     expenseCategoryList : string[] = [];
     incomeCategoryList : string[] = [];
+    accountList : string[] = [];
     constructor(
         private dataService: DataService,
         private formBuilder: FormBuilder
     ) { }
 
     ngOnInit() {
-        this.dataService.expenseCategoryList.subscribe(list => this.expenseCategoryList = list)
-        this.dataService.incomeCategoryList.subscribe(list => this.incomeCategoryList = list)
+        this.dataService.expenseCategoryList.subscribe(list => this.expenseCategoryList = list);
+        this.dataService.incomeCategoryList.subscribe(list => this.incomeCategoryList = list);
+        this.dataService.accountList.subscribe(list => this.accountList = list);
     }
 
     newCategoryForm = this.formBuilder.group({
         categoryName: ['', Validators.required]
     });
 
+    newAccountForm = this.formBuilder.group({
+        accountName: ['', Validators.required]
+    });
+
     async onSubmit(isExpense : boolean): Promise<void> {
         if (this.newCategoryForm.status == 'VALID') {
-            let newCat = this.newCategoryForm.value["categoryName"];
+            let newCat = this.newCategoryForm.value["categoryName"] || "";
             console.log(newCat);
             if (isExpense) {
                 await this.dataService.addExpenseCategory(newCat);
             } else {
                 await this.dataService.addIncomeCategory(newCat);
             }
-            console.log(this.expenseCategoryList);
             this.newCategoryForm.reset();
-
         } else if (this.newCategoryForm.status == 'INVALID') {
             console.log('invalid input');
         }
+    }
 
+    async onSubmitAccount(): Promise<void> {
+        if (this.newAccountForm.status == 'VALID') {
+            let newAccount = this.newAccountForm.value["accountName"] || "";
+            console.log(newAccount);
+            await this.dataService.addAccount(newAccount);
+            console.log(this.accountList);
+            this.newAccountForm.reset();
+        } else if (this.newAccountForm.status == 'INVALID') {
+            console.log('invalid input');
+        }
     }
 
     async removeExpenseCategory(i : number): Promise<void> {
@@ -50,6 +65,10 @@ export class Tab3Page {
 
     async removeIncomeCategory(i : number): Promise<void> {
         await this.dataService.removeIncomeCategory(i);
+    }
+
+    async removeAccount(i : number): Promise<void> {
+        await this.dataService.removeAccount(i);
     }
 
     async clearData() {
