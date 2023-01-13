@@ -1,5 +1,6 @@
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
+import { NgxColorsModule } from 'ngx-colors';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Tab3Page } from './tab3.page';
@@ -12,6 +13,7 @@ import { Tab3PageRoutingModule } from './tab3-routing.module';
     IonicModule,
     CommonModule,
     FormsModule,
+        NgxColorsModule,
     ReactiveFormsModule,
     ExploreContainerComponentModule,
     Tab3PageRoutingModule

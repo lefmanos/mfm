@@ -24,13 +24,18 @@ export class Tab3Page {
         this.dataService.accountList.subscribe(list => this.accountList = list);
     }
 
+    color ='';
     newCategoryForm = this.formBuilder.group({
-        categoryName: ['', Validators.required]
+        categoryName: ['', Validators.required],
+        color: ['']
     });
 
     newAccountForm = this.formBuilder.group({
         accountName: ['', Validators.required]
     });
+
+    eventOccur(event: any) {
+    }
 
     async onSubmit(isExpense : boolean): Promise<void> {
         if (this.newCategoryForm.status == 'VALID') {
@@ -50,7 +55,7 @@ export class Tab3Page {
     async onSubmitAccount(): Promise<void> {
         if (this.newAccountForm.status == 'VALID') {
             let newAccount = this.newAccountForm.value["accountName"] || "";
-            console.log(newAccount);
+            console.log(this.newAccountForm.value);
             await this.dataService.addAccount(newAccount);
             console.log(this.accountList);
             this.newAccountForm.reset();
