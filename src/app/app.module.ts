@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { NgxColorsModule } from 'ngx-colors';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -19,6 +20,7 @@ import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
         IonicModule.forRoot(), 
         AppRoutingModule,
         NgxColorsModule,
+        BrowserAnimationsModule,
         IonicStorageModule.forRoot({
             name: "mdb",
             driverOrder: [CordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage]

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DataService } from '../services/data.service';
-import { transaction } from '../services/transaction.interface'
+import { transaction, category } from '../services/transaction.interface'
 
 @Component({
     selector: 'app-tab2',
@@ -9,8 +9,8 @@ import { transaction } from '../services/transaction.interface'
 })
 export class Tab2Page {
     transactionList :transaction[] = [];
-    expenseCategoryList : string[] = [];
-    weekArray = [['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
+    expenseCategoryList : category[] = [];
+    weekArray = [['', '', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
 
     constructor(private dataService: DataService) {
     }
@@ -23,7 +23,7 @@ export class Tab2Page {
 
     private buildWeekarray() {
         for (let cat of this.expenseCategoryList) {
-            this.weekArray.push([cat, '0', '0', '0', '0', '0', '0', '0']);
+            this.weekArray.push([cat['color'], cat['name'], '0', '0', '0', '0', '0', '0', '0']);
         }
     }
     printSum() {

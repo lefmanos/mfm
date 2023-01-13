@@ -7,6 +7,11 @@ export interface transaction {
     notes: string;
 }
 
+export interface category {
+    name: string;
+    color: string;
+}
+
 export function reduceTransaction(accumulator: number, tr: transaction) {
     return accumulator + tr["amount"];
 }

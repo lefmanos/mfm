@@ -16,15 +16,32 @@
   <ion-grid>
 
       <ion-row *ngFor="let row of weekArray">
-          <ion-col>{{ row[0] }}</ion-col>
-          <ion-col>{{ row[1] }}</ion-col>
-          <ion-col>{{ row[2] }}</ion-col>
-          <ion-col>{{ row[3] }}</ion-col>
-          <ion-col>{{ row[4] }}</ion-col>
-          <ion-col>{{ row[5] }}</ion-col>
-          <ion-col>{{ row[6] }}</ion-col>
-          <ion-col>{{ row[7] }}</ion-col>
-          <ion-col>{{ row[8] }}</ion-col>
+          <ion-col>
+              <ion-item [style.--background]="row[0]">
+                  {{ row[1] }}
+              </ion-item>
+          </ion-col>
+          <ion-col>
+              {{ row[2] }}
+          </ion-col>
+          <ion-col>
+              {{ row[3] }}
+          </ion-col>
+          <ion-col>
+              {{ row[4] }}
+          </ion-col>
+          <ion-col>
+              {{ row[5] }}
+          </ion-col>
+          <ion-col>
+              {{ row[6] }}
+          </ion-col>
+          <ion-col>
+              {{ row[7] }}
+          </ion-col>
+          <ion-col>
+              {{ row[8] }}
+          </ion-col>
       </ion-row>
 
       <ion-row>

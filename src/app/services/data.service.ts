@@ -5,7 +5,7 @@ import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 import { BehaviorSubject, from, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { filter } from 'rxjs/operators';
-import { transaction, compareTransaction } from './transaction.interface';
+import { category, transaction, compareTransaction } from './transaction.interface';
 
 const TRANSACTIONS = 'transactions'
 const EXPENSECAT = 'expence_categories'
@@ -17,8 +17,8 @@ const ACCOUNTS = 'accounts'
 })
 export class DataService {
     private storageReady = new BehaviorSubject(false);
-    private expenseCategorySource = new BehaviorSubject([]);
-    private incomeCategorySource = new BehaviorSubject([]);
+    private expenseCategorySource = new BehaviorSubject([] as category[]);
+    private incomeCategorySource = new BehaviorSubject([] as category[]);
     private transactionsSource = new BehaviorSubject([] as transaction[]);
     private accountsSource = new BehaviorSubject([]);
     expenseCategoryList = this.expenseCategorySource.asObservable();
@@ -50,7 +50,7 @@ export class DataService {
         this.loadAccounts();
     }
 
-    async addIncomeCategory(item: string) {
+    async addIncomeCategory(item: category) {
         await this.addData(INCOMECAT, item);
         this.loadCategories();
     }
@@ -60,7 +60,7 @@ export class DataService {
         this.loadCategories();
     }
 
-    async addExpenseCategory(item: string) {
+    async addExpenseCategory(item: category) {
         await this.addData(EXPENSECAT, item);
         this.loadCategories();
     }

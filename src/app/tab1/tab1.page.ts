@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DataService } from '../services/data.service';
 import { format, parseISO } from 'date-fns';
-import { transaction } from '../services/transaction.interface'
+import { transaction, category } from '../services/transaction.interface'
 
 @Component({
     selector: 'app-tab1',
@@ -11,9 +11,11 @@ import { transaction } from '../services/transaction.interface'
 })
 export class Tab1Page {
 
-    expenseCategoryList : string[] = [];
-    incomeCategoryList : string[] = [];
+    expenseCategoryList : category[] = [];
+    incomeCategoryList : category[] = [];
     accountList : string[] = [];
+    addingExpense = "true";
+
     constructor(
         private dataService: DataService,
         private formBuilder: FormBuilder
@@ -35,36 +37,55 @@ export class Tab1Page {
         this.resetForm();
     }
 
-    private resetForm() {
+    resetForm() {
         this.newTransactionForm.reset();
         let datenow = (new Date(Date.now())).toISOString();
         datenow = format(parseISO(datenow), 'yyyy-MM-dd');
-        this.newTransactionForm.setValue ({
-            date: datenow,
-            category: this.expenseCategoryList[0],
-            account: this.accountList[0],
-            amount: 0,
-            notes: ''
-        });
+        if (this.addingExpense == "true") {
+            this.newTransactionForm.setValue ({
+                date: datenow,
+                category: this.expenseCategoryList[0]['name'],
+                account: this.accountList[0],
+                amount: 0,
+                notes: ''
+            });
+        } else {
+            this.newTransactionForm.setValue ({
+                date: datenow,
+                category: this.incomeCategoryList[0]['name'],
+                account: this.accountList[0],
+                amount: 0,
+                notes: ''
+            });
+        }
 
     }
 
     async onSubmit(): Promise<void> {
-        if (this.newTransactionForm.status == 'VALID') {
-
-            let newTransaction :transaction = { 
-                date:       this.newTransactionForm.value["date"] as string,
-                category:   this.newTransactionForm.value["category"] as string,
-                account:   this.newTransactionForm.value["account"] as string,
-                amount:     this.newTransactionForm.value["amount"] as number,
-                notes:      this.newTransactionForm.value["notes"] as string
-            }
-            console.log(newTransaction);
-            await this.dataService.addTransactions(newTransaction);
-            this.resetForm();
-        } else {
+        if (this.newTransactionForm.status != 'VALID') {
             console.log(this.newTransactionForm.value);
             console.log('Invalid input');
+            return;
         }
+        if (this.newTransactionForm.value["amount"] as number == 0) {
+            console.log('no price defined');
+            return;
+        }
+
+        let incomeFactor : number = -1
+        if (this.addingExpense == 'false') {
+            incomeFactor = 1;
+        }
+        let newTransaction :transaction = { 
+            date:       this.newTransactionForm.value["date"] as string,
+            category:   this.newTransactionForm.value["category"] as string,
+            account:    this.newTransactionForm.value["account"] as string,
+            amount:     incomeFactor*(this.newTransactionForm.value["amount"] as number),
+            notes:      this.newTransactionForm.value["notes"] as string
+        }
+
+        console.log(newTransaction);
+        await this.dataService.addTransactions(newTransaction);
+        this.resetForm();
     }
 }
