@@ -35,16 +35,35 @@ upload()
     megatools mkdir -u $MEGA_USER -p $MEGA_PASS  /Root/apk/
     megatools copy  -u $MEGA_USER -p $MEGA_PASS -l $build_path -r /Root/apk
 }
+build_android()
+{
+    cordova platform remove android --nosave
+    cordova platform add android --nosave
+    cordova platform prepare android
+    cordova build android 
+}
 
 build_and_upload()
 {
     git pull
-    cordova build android && upload
+    build_android && upload
 }
 
+if [ $# -eq 1 ]; then
+    if [ $1 = "-b" ]; then
+        build_android
+    elif [ $1 = "-u" ]; then
+        upload
+    else
+        echo "-b build"
+        echo "-u upload"
+    fi
+    exit
+fi
+
+echo start daemon check build and upload workflow
 while true;
 do
-    echo checking for updates
     check_for_updates && build_and_upload
     sleep 5s
 
