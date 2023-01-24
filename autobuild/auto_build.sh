@@ -38,6 +38,7 @@ upload()
 
 build_and_upload()
 {
+    git pull
     cordova build android && upload
 }
 
