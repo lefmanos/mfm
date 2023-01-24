@@ -35,9 +35,6 @@ export class Tab3Page {
         accountName: ['', Validators.required]
     });
 
-    eventOccur(event: any) {
-    }
-
     async onSubmit(isExpense : boolean): Promise<void> {
         if (this.newCategoryForm.status != 'VALID') {
             console.log('invalid input');

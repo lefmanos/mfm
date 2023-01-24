@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { format, parseISO } from 'date-fns';
 import { DataService } from '../services/data.service';
 import { transaction, reduceTransaction, filterTransaction } from './transaction.interface';
