@@ -29,10 +29,16 @@ check_for_updates()
     return $is_up_to_date
 }
 
+upload()
+{
+    megatools rm    -u $MEGA_USER -p $MEGA_PASS  /Root/apk/
+    megatools mkdir -u $MEGA_USER -p $MEGA_PASS  /Root/apk/
+    megatools copy  -u $MEGA_USER -p $MEGA_PASS -l $build_path -r /Root/apk
+}
 
 build_and_upload()
 {
-    cordova build android && megatools copy -u $MEGA_USER -p $MEGA_PASS -l $build_path -r /Root/apk
+    cordova build android && upload
 }
 
 while true;
