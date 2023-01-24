@@ -12,12 +12,15 @@ import { transaction, category, ui_info } from '../services/transaction.interfac
 export class Tab2Page {
     transactionList :transaction[] = [];
     expenseCategoryList : category[] = [];
+    incomeCategoryList : category[] = [];
     ui: ui_info = {
         weekDay : -1,
         isCurrentDate: false,
         weekRange: ['', '']
     };
     weekArray = [['', 'Sumary', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
+    weekArrayExpenses = [['', '', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
+    weekArrayIncome = [['', '', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
 
     constructor(
         private dataService: DataService,
@@ -27,6 +30,7 @@ export class Tab2Page {
     async ngOnInit(){
         this.dataService.transactionList.subscribe(list => this.transactionList = list);
         this.dataService.expenseCategoryList.subscribe(list => this.expenseCategoryList = list);
+        this.dataService.incomeCategoryList.subscribe(list => this.incomeCategoryList = list);
         this.updateUIData();
     }
 
@@ -40,7 +44,10 @@ export class Tab2Page {
     private buildWeekarray() {
         this.weekArray.push(['#deaf42', 'balance', '0', '0', '0', '0', '0', '0', '0']);
         for (let cat of this.expenseCategoryList) {
-            this.weekArray.push([cat['color'], cat['name'], '0', '0', '0', '0', '0', '0', '0']);
+            this.weekArrayExpenses.push([cat['color'], cat['name'], '0', '0', '0', '0', '0', '0', '0']);
+        }
+        for (let cat of this.incomeCategoryList) {
+            this.weekArrayIncome.push([cat['color'], cat['name'], '0', '0', '0', '0', '0', '0', '0']);
         }
     }
     printSum() {

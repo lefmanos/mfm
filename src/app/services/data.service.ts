@@ -91,6 +91,11 @@ export class DataService {
 
     private loadAccounts() {
         this.getData(ACCOUNTS).subscribe(res => {
+            if (res == null) {
+                let default_account : string = "Cash"
+                this.addAccount(default_account);
+                return;
+            }
             this.accountsSource.next(res);
         });
     }
@@ -105,9 +110,25 @@ export class DataService {
 
     private loadCategories() {
         this.getData(EXPENSECAT).subscribe(res => {
+            if (res == null) {
+                let default_expense_category : category ={
+                    name : "gifts",
+                    color : "#de0042"
+                }
+                this.addExpenseCategory(default_expense_category);
+                return;
+            }
             this.expenseCategorySource.next(res);
         });
         this.getData(INCOMECAT).subscribe(res => {
+            if (res == null) {
+                let default_income_category : category ={
+                    name : "gifts",
+                    color : "#00af42"
+                }
+                this.addIncomeCategory(default_income_category);
+                return;
+            }
             this.incomeCategorySource.next(res);
         });
     }
