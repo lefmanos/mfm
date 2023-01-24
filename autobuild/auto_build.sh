@@ -37,6 +37,7 @@ upload()
 }
 build_android()
 {
+    cordova clean
     cordova platform remove android --nosave
     cordova platform add android --nosave
     cordova platform prepare android
