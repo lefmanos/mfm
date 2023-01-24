@@ -34,10 +34,10 @@ export class Tab1Page {
         this.dataService.incomeCategoryList.subscribe(list => this.incomeCategoryList = list)
         this.dataService.accountList.subscribe(list => this.accountList = list)
 
-        this.resetForm();
+        await this.resetForm();
     }
 
-    resetForm() {
+    async resetForm() {
         this.newTransactionForm.reset();
         let datenow = (new Date(Date.now())).toISOString();
         datenow = format(parseISO(datenow), 'yyyy-MM-dd');
