@@ -40,7 +40,7 @@ build_android()
     ionic cordova platform remove android --nosave
     ionic cordova platform add android --nosave
     ionic build
-    ionic cordova platform prepare android
+    ionic cordova prepare android
     ionic cordova build android 
 }
 
