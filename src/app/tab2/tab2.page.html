@@ -13,37 +13,36 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-grid>
+  <ion-grid [style.--ion-grid-columns]="10">
 
-      <ion-row *ngFor="let row of weekArray">
-          <ion-col>
-              <ion-item [style.--background]="row[0]">
-                  {{ row[1] }}
-              </ion-item>
-          </ion-col>
-          <ion-col>
-              {{ row[2] }}
-          </ion-col>
-          <ion-col>
-              {{ row[3] }}
-          </ion-col>
-          <ion-col>
-              {{ row[4] }}
-          </ion-col>
-          <ion-col>
-              {{ row[5] }}
-          </ion-col>
-          <ion-col>
-              {{ row[6] }}
-          </ion-col>
-          <ion-col>
-              {{ row[7] }}
-          </ion-col>
-          <ion-col>
-              {{ row[8] }}
-          </ion-col>
-      </ion-row>
+      <div class="ion-padding">
+          <ion-row>
+              <ion-col size=3>
+                  <ion-item>
+                      {{ weekArray[0][1] }}
+                  </ion-item>
+              </ion-col>
+              <ion-col *ngFor="let column of weekArray[0].slice(2)" shape="round" lines="full" size=1>
+                  <ion-item>
+                      {{ column }}
+                  </ion-item>
+              </ion-col>
+          </ion-row>
 
+          <ion-row *ngFor="let row of weekArray.slice(1)" >
+              <ion-col size=3>
+                  <ion-item [style.--background]="row[0]">
+                      {{ row[1] }}
+                  </ion-item>
+              </ion-col>
+              <ion-col *ngFor="let column of row.slice(2)" shape="round" lines="full" size=1>
+                  <ion-item [style.--background]="row[0]">
+                      {{ column }}
+                  </ion-item>
+              </ion-col>
+          </ion-row>
+
+          </div>
       <ion-row>
           <ion-list>
               <ion-item-sliding *ngFor="let item of transactionList; let i = index">

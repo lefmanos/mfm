@@ -10,7 +10,7 @@ import { transaction, category } from '../services/transaction.interface'
 export class Tab2Page {
     transactionList :transaction[] = [];
     expenseCategoryList : category[] = [];
-    weekArray = [['', '', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
+    weekArray = [['', 'Sumary', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
 
     constructor(private dataService: DataService) {
     }
@@ -22,6 +22,7 @@ export class Tab2Page {
     }
 
     private buildWeekarray() {
+        this.weekArray.push(['#deaf42', 'balance', '0', '0', '0', '0', '0', '0', '0']);
         for (let cat of this.expenseCategoryList) {
             this.weekArray.push([cat['color'], cat['name'], '0', '0', '0', '0', '0', '0', '0']);
         }
