@@ -27,6 +27,7 @@ export class DataService {
     accountList = this.accountsSource.asObservable();
 
     constructor(private storage: Storage) { 
+        this.init();
     }
 
     async init() {
