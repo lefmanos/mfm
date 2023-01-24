@@ -48,6 +48,9 @@ build_and_upload()
 {
     git pull
     build_android && upload
+    git add --all
+    git commit -m "Automatic build"
+    git push
 }
 
 if [ $# -eq 1 ]; then
