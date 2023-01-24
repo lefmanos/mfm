@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { DataService } from '../services/data.service';
-import { transaction, category } from '../services/transaction.interface'
+import { StatisticsService } from '../services/statistics.service';
+import { transaction, category, ui_info } from '../services/transaction.interface'
+
 
 @Component({
     selector: 'app-tab2',
@@ -10,14 +12,28 @@ import { transaction, category } from '../services/transaction.interface'
 export class Tab2Page {
     transactionList :transaction[] = [];
     expenseCategoryList : category[] = [];
+    ui: ui_info = {
+        weekDay : -1,
+        isCurrentDate: false,
+        weekRange: ['', '']
+    };
     weekArray = [['', 'Sumary', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
 
-    constructor(private dataService: DataService) {
-    }
+    constructor(
+        private dataService: DataService,
+        private stats: StatisticsService
+    ) { }
 
     async ngOnInit(){
         this.dataService.transactionList.subscribe(list => this.transactionList = list);
         this.dataService.expenseCategoryList.subscribe(list => this.expenseCategoryList = list);
+        this.updateUIData();
+    }
+
+    private updateUIData() {
+        this.ui['weekDay'] = this.stats.getCurrentWeekDay();
+        this.ui['isCurrentDate'] = true;
+        this.ui['weekRange'] = this.stats.getCurrentWeekDateRange();
         this.buildWeekarray();
     }
 

@@ -4,9 +4,12 @@ import { format, parseISO } from 'date-fns';
 import { DataService } from '../services/data.service';
 import { transaction, reduceTransaction, filterTransaction } from './transaction.interface';
 
+const ms2UnixDate = 86400000;
+
 @Injectable({
     providedIn: 'root'
 })
+
 export class StatisticsService {
 
     private balanceSource = new BehaviorSubject({});
@@ -35,17 +38,17 @@ export class StatisticsService {
     }
 
     getCurrentMonthsTransactions(accounts: string[] = [], categories: string[] = []) {
-        let today = this.getToday();
+        let today = this.getFormatedDay();
         return filterTransaction(this.transactionList, accounts, categories, `${today.slice(0,-2)}00`, today);
     }
 
     getTodaysTransactions(accounts: string[] = [], categories: string[] = []) {
-        let today = this.getToday();
+        let today = this.getFormatedDay();
         return filterTransaction(this.transactionList, accounts, categories, today, today);
     }
 
     getTodaysBalance(accounts: string[] = [], categories: string[] = []) {
-        let today = this.getToday();
+        let today = this.getFormatedDay();
         return this.getBalance(accounts, categories, today);
     }
 
@@ -57,7 +60,18 @@ export class StatisticsService {
     private formatDate(d: Date) : string {
         return format(parseISO(d.toISOString()), 'yyyy-MM-dd');
     }
-    private getToday() : string{
-        return this.formatDate(new Date(Date.now()));
+
+    getCurrentWeekDateRange() {
+        let d = this.getCurrentWeekDay();
+        let weekStart = this.getFormatedDay(-d);
+        let weekEnd = this.getFormatedDay(7-d);
+        return [weekStart, weekEnd];
+    }
+
+    getCurrentWeekDay(): number {
+        return (new Date(Date.now())).getDay();
+    }
+    private getFormatedDay(dayOffset: number = 0) : string{
+        return this.formatDate(new Date(Date.now() + dayOffset*ms2UnixDate));
     }
 }

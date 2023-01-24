@@ -12,6 +12,12 @@ export interface category {
     color: string;
 }
 
+export interface ui_info {
+    weekDay: number;
+    isCurrentDate: boolean;
+    weekRange: string[];
+}
+
 export function reduceTransaction(accumulator: number, tr: transaction) {
     return accumulator + tr["amount"];
 }

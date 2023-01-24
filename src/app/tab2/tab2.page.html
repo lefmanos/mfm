@@ -22,23 +22,38 @@
                       {{ weekArray[0][1] }}
                   </ion-item>
               </ion-col>
-              <ion-col *ngFor="let column of weekArray[0].slice(2)" shape="round" lines="full" size=1>
-                  <ion-item>
-                      {{ column }}
-                  </ion-item>
+              <ion-col *ngFor="let column of weekArray[0].slice(2); let i = index" shape="round" lines="full" size=1>
+                  <div *ngIf="i+1==this.ui['weekDay']; else elseBlock">
+                      <ion-item color="warning">
+                          {{ column }}
+                      </ion-item>
+                  </div>
+                  <ng-template #elseBlock>
+                      <ion-item>
+                          {{ column }}
+                      </ion-item>
+                  </ng-template>
               </ion-col>
           </ion-row>
 
           <ion-row *ngFor="let row of weekArray.slice(1)" >
               <ion-col size=3>
-                  <ion-item [style.--background]="row[0]">
-                      {{ row[1] }}
-                  </ion-item>
+                  <ion-card [style.--background]="row[0]">
+                      <ion-card-header>
+                          <ion-card-title>
+                              {{ row[1] }}
+                          </ion-card-title>
+                      </ion-card-header>
+                  </ion-card>
               </ion-col>
               <ion-col *ngFor="let column of row.slice(2)" shape="round" lines="full" size=1>
-                  <ion-item [style.--background]="row[0]">
-                      {{ column }}
-                  </ion-item>
+                  <ion-card [style.--background]="row[0]">
+                      <ion-card-header>
+                          <ion-card-title>
+                              {{ column }}
+                          </ion-card-title>
+                      </ion-card-header>
+                  </ion-card>
               </ion-col>
           </ion-row>
 
