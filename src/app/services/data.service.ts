@@ -113,7 +113,7 @@ export class DataService {
             if (res == null) {
                 let default_expense_category : category ={
                     name : "gifts",
-                    color : "#de0042"
+                    color : "#de1042"
                 }
                 this.addExpenseCategory(default_expense_category);
                 return;
