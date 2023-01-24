@@ -37,11 +37,11 @@ upload()
 }
 build_android()
 {
-    cordova clean
-    cordova platform remove android --nosave
-    cordova platform add android --nosave
-    cordova platform prepare android
-    cordova build android 
+    ionic cordova platform remove android --nosave
+    ionic cordova platform add android --nosave
+    ionic build
+    ionic cordova platform prepare android
+    ionic cordova build android 
 }
 
 build_and_upload()
