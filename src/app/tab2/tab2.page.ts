@@ -19,9 +19,11 @@ export class Tab2Page {
         weekRange: ['', '']
     };
     weekArray = [['', 'Sumary', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
-    weekArrayExpenses = [['', '', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
-    weekArrayIncome = [['', '', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
+    weekArrayExpenses : string[][] = [];
+    weekArrayIncome : string[][] = [];
+    weekBalance : number[][] = [];
 
+    balanceColor = "deaf42";
     constructor(
         private dataService: DataService,
         private stats: StatisticsService
@@ -29,9 +31,12 @@ export class Tab2Page {
 
     async ngOnInit(){
         console.log('ngOnInit tab2');
-        this.dataService.transactionList.subscribe(list => this.transactionList = list);
-        this.dataService.expenseCategoryList.subscribe(list => this.expenseCategoryList = list);
-        this.dataService.incomeCategoryList.subscribe(list => this.incomeCategoryList = list);
+        this.stats.balanceWeekArray.subscribe(list => this.weekBalance = list);
+        this.stats.weekArrayIncome.subscribe(list => this.weekArrayIncome = list);
+        this.stats.weekArrayExpenses.subscribe(list => this.weekArrayExpenses = list);
+        this.dataService.transactionList.subscribe(list => { this.transactionList = list; });
+        this.dataService.expenseCategoryList.subscribe(list => { this.expenseCategoryList = list; });
+        this.dataService.incomeCategoryList.subscribe(list => { this.incomeCategoryList = list; });
         this.updateUIData();
     }
 
@@ -39,18 +44,8 @@ export class Tab2Page {
         this.ui['weekDay'] = this.stats.getCurrentWeekDay();
         this.ui['isCurrentDate'] = true;
         this.ui['weekRange'] = this.stats.getCurrentWeekDateRange();
-        this.buildWeekarray();
     }
 
-    private buildWeekarray() {
-        this.weekArray.push(['#deaf42', 'balance', '0', '0', '0', '0', '0', '0', '0']);
-        for (let cat of this.expenseCategoryList) {
-            this.weekArrayExpenses.push([cat['color'], cat['name'], '0', '0', '0', '0', '0', '0', '0']);
-        }
-        for (let cat of this.incomeCategoryList) {
-            this.weekArrayIncome.push([cat['color'], cat['name'], '0', '0', '0', '0', '0', '0', '0']);
-        }
-    }
     printSum() {
         let sum = 0;
         for (let tr of this.transactionList) {
