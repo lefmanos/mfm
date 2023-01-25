@@ -51,13 +51,17 @@
                             <ion-badge slot="end" color="danger"> {{ column[0].toString() }} </ion-badge>
                     </div>
                     <ng-template #elseBalance>
+                        <ng-container>
                             <ion-badge slot="end"> {{ column[0].toString() }} </ion-badge>
+                        </ng-container>
                     </ng-template>
                     <div *ngIf="column[1]<0; else elseBudget">
                             <ion-badge slot="start" color="danger"> {{ column[1].toString() }} </ion-badge>
                     </div>
                     <ng-template #elseBudget>
+                        <ng-container>
                             <ion-badge slot="start" > {{ column[1].toString() }} </ion-badge>
+                        </ng-container>
                     </ng-template>
                 </ion-col>
             </ion-row>
