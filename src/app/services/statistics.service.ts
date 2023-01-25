@@ -100,7 +100,7 @@ export class StatisticsService {
     }
 
     getCategoryDaysBalance(cat : string, untilDate: string) {
-        return this.getBalance([], [cat], untilDate,);
+        return this.getBalance([], [cat], untilDate, untilDate);
     }
 
     getBalance( account: string[] = [], category: string[] = [], untilDate: string, fromDate: string = "0000-00-00") {
