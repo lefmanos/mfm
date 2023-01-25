@@ -28,6 +28,7 @@ export class Tab2Page {
     ) { }
 
     async ngOnInit(){
+        console.log('ngOnInit tab2');
         this.dataService.transactionList.subscribe(list => this.transactionList = list);
         this.dataService.expenseCategoryList.subscribe(list => this.expenseCategoryList = list);
         this.dataService.incomeCategoryList.subscribe(list => this.incomeCategoryList = list);

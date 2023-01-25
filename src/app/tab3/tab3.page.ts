@@ -20,6 +20,7 @@ export class Tab3Page {
     ) { }
 
     ngOnInit() {
+        console.log('ngOnInit tab3');
         this.dataService.expenseCategoryList.subscribe(list => this.expenseCategoryList = list);
         this.dataService.incomeCategoryList.subscribe(list => this.incomeCategoryList = list);
         this.dataService.accountList.subscribe(list => this.accountList = list);

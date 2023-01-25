@@ -5,6 +5,7 @@ import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 import { BehaviorSubject, from, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { filter } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { category, transaction, compareTransaction } from './transaction.interface';
 
 const TRANSACTIONS = 'transactions'
@@ -27,18 +28,19 @@ export class DataService {
     accountList = this.accountsSource.asObservable();
 
     constructor(private storage: Storage) { 
+        console.log('Data Service construction');
         this.init();
+        this.expenseCategoryList.pipe(take(1));
+        console.log('Data Service construction return');
     }
 
     async init() {
+        console.log('Data Service async init function');
         await this.storage.defineDriver(CordovaSQLiteDriver);
         await this.storage.create();
-        this.loadAll();
         this.storageReady.next(true);
-    }
-
-    async ngOnInit(){
         this.loadAll();
+        console.log('Data Service async init function done');
     }
 
     async addAccount(item: string) {
@@ -84,13 +86,17 @@ export class DataService {
     /* shared data helpers */
 
     private loadAll() {
+        console.log('load all data');
         this.loadCategories();
         this.loadAccounts();
         this.loadTransactions();
+        console.log('load all data done');
     }
 
     private loadAccounts() {
         this.getData(ACCOUNTS).subscribe(res => {
+            console.log('loading accounts');
+            console.log(res);
             if (res == null) {
                 let default_account : string = "Cash"
                 this.addAccount(default_account);
@@ -110,7 +116,10 @@ export class DataService {
 
     private loadCategories() {
         this.getData(EXPENSECAT).subscribe(res => {
+            console.log('loading categories');
+            console.log(res);
             if (res == null) {
+                console.log('Initializing empty expense category');
                 let default_expense_category : category ={
                     name : "gifts",
                     color : "#de1042"
@@ -121,7 +130,10 @@ export class DataService {
             this.expenseCategorySource.next(res);
         });
         this.getData(INCOMECAT).subscribe(res => {
+            console.log('loading categories')
+            console.log(res);
             if (res == null) {
+                console.log('Initializing empty income category');
                 let default_income_category : category ={
                     name : "gifts",
                     color : "#00a420"
