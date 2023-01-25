@@ -48,16 +48,16 @@
                 </ion-col>
                 <ion-col *ngFor="let column of weekBalance" size=1>
                     <div *ngIf="column[0]<0; else elseBalance">
-                            <ion-badge slot="start" color="danger"> {{ column[0].toString() }} </ion-badge>
+                            <ion-badge slot="end" color="danger"> {{ column[0].toString() }} </ion-badge>
                     </div>
                     <ng-template #elseBalance>
-                            <ion-badge slot="start"> {{ column[0].toString() }} </ion-badge>
+                            <ion-badge slot="end"> {{ column[0].toString() }} </ion-badge>
                     </ng-template>
                     <div *ngIf="column[1]<0; else elseBudget">
-                            <ion-badge slot="end" color="danger"> {{ column[1].toString() }} </ion-badge>
+                            <ion-badge slot="start" color="danger"> {{ column[1].toString() }} </ion-badge>
                     </div>
                     <ng-template #elseBudget>
-                            <ion-badge slot="end" > {{ column[1].toString() }} </ion-badge>
+                            <ion-badge slot="start" > {{ column[1].toString() }} </ion-badge>
                     </ng-template>
                 </ion-col>
             </ion-row>
