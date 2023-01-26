@@ -21,7 +21,7 @@ export class Tab2Page {
     weekArray = [['', 'Sumary', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']];
     weekArrayExpenses : string[][] = [];
     weekArrayIncome : string[][] = [];
-    weekBalance : number[][] = [];
+    weekBalance : string[][] = [];
 
     balanceColor = "deaf42";
     constructor(

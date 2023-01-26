@@ -36,57 +36,18 @@
                 </ion-col>
             </ion-row>
 
-            <ion-row>
+            <ion-row *ngFor="let row of weekBalance; let i = index">
                 <ion-col size=2>
-                    <ion-card [style.--background]="balanceColor">
-                        <ion-card-header>
-                            <ion-card-subtitle>
+                    <ion-badge [style.--background]="balanceColor">
                                 Balance
-                            </ion-card-subtitle>
-                        </ion-card-header>
-                    </ion-card>
+                    </ion-badge>
                 </ion-col>
-                <ion-col *ngFor="let column of weekBalance" size=1>
-                    <div *ngIf="column[0]<0; else elseBalance">
-                            <ion-badge slot="end" color="danger"> {{ column[0].toString() }} </ion-badge>
-                    </div>
-                    <ng-template #elseBalance>
-                        <ng-container>
-                            <ion-badge slot="end"> {{ column[0].toString() }} </ion-badge>
-                        </ng-container>
-                    </ng-template>
-                    <div *ngIf="column[1]<0; else elseBudget">
-                            <ion-badge slot="start" color="danger"> {{ column[1].toString() }} </ion-badge>
-                    </div>
-                    <ng-template #elseBudget>
-                        <ng-container>
-                            <ion-badge slot="start" > {{ column[1].toString() }} </ion-badge>
-                        </ng-container>
-                    </ng-template>
-                </ion-col>
-            </ion-row>
-
-            <ion-row>
-                <ion-label>
-                    Epxenses
-                </ion-label>
-            </ion-row>
-            <ion-row *ngFor="let row of weekArrayExpenses" >
-                <ion-col size=2>
-                    <ion-card [style.--background]="row[0]">
-                        <ion-card-header>
-                            <ion-card-title>
-                                {{ row[1][0] }}
-                            </ion-card-title>
-                        </ion-card-header>
-                    </ion-card>
-                </ion-col>
-                <ion-col *ngFor="let column of row.slice(2)" size=1>
-                    <div *ngIf="+column<0; else elseExpenses">
+                <ion-col *ngFor="let column of row.slice(0)" size=1>
+                    <div *ngIf="+column<0; else elseBlock">
                             <ion-badge color="danger"> {{ column }} </ion-badge>
                     </div>
-                    <ng-template #elseExpenses>
-                        <ng-container  *ngIf="+column>0">
+                    <ng-template #elseBlock>
+                        <ng-container  *ngIf="+column>0 || i == 0">
                             <ion-badge> {{ column }} </ion-badge>
                         </ng-container>
                     </ng-template>
@@ -94,25 +55,38 @@
             </ion-row>
 
             <ion-row>
-                <ion-label>
-                    Income
-                </ion-label>
+                <ion-label> Details </ion-label>
             </ion-row>
-            <ion-row *ngFor="let row of weekArrayIncome" >
+
+            <ion-row *ngFor="let row of weekArrayExpenses" >
                 <ion-col size=2>
-                    <ion-card [style.--background]="row[0]">
-                        <ion-card-header>
-                            <ion-card-title>
-                                {{ row[1][0] }}
-                            </ion-card-title>
-                        </ion-card-header>
-                    </ion-card>
+                    <ion-badge [style.--background]="row[0]">
+                                {{ row[1] }}
+                    </ion-badge>
                 </ion-col>
-                <ion-col *ngFor="let column of row.slice(2)" shape="round" lines="full" size=1>
-                    <div *ngIf="+column<0; else elseIncome">
+                <ion-col *ngFor="let column of row.slice(2)" size=1>
+                    <div *ngIf="+column<0; else elseBlock">
                             <ion-badge color="danger"> {{ column }} </ion-badge>
                     </div>
-                    <ng-template #elseIncome>
+                    <ng-template #elseBlock>
+                        <ng-container  *ngIf="+column>0">
+                            <ion-badge> {{ column }} </ion-badge>
+                        </ng-container>
+                    </ng-template>
+                </ion-col>
+            </ion-row>
+
+            <ion-row *ngFor="let row of weekArrayIncome" >
+                <ion-col size=2>
+                    <ion-badge [style.--background]="row[0]">
+                                {{ row[1] }}
+                    </ion-badge>
+                </ion-col>
+                <ion-col *ngFor="let column of row.slice(2)" shape="round" lines="full" size=1>
+                    <div *ngIf="+column<0; else elseBlock">
+                            <ion-badge color="danger"> {{ column }} </ion-badge>
+                    </div>
+                    <ng-template #elseBlock>
                         <ng-container *ngIf="+column>0">
                             <ion-badge> {{ column }} </ion-badge>
                         </ng-container>

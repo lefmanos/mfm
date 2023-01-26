@@ -13,7 +13,7 @@ const ms2UnixDate = 86400000;
 export class StatisticsService {
 
     private balanceSource = new BehaviorSubject({});
-    balanceWeekSource = new BehaviorSubject([] as number[][]);
+    balanceWeekSource = new BehaviorSubject([] as string[][]);
     weekExpensesSource = new BehaviorSubject([] as string[][]);
     weekIncomeSource  = new BehaviorSubject([] as string[][]);
 
@@ -37,28 +37,40 @@ export class StatisticsService {
     init() {
         this.dataService.transactionList.subscribe(list => {
             this.transactionList = list;
-            this.updateBalance();
+            if (list.length) {
+                this.updateBalance();
+            }
         });
         this.dataService.expenseCategoryList.subscribe(list => {
             this.expenseCategoryList = list;
-            this.updateBalance();
+            if (list.length) {
+                this.updateBalance();
+            }
         });
         this.dataService.incomeCategoryList.subscribe(list => {
             this.incomeCategoryList = list;
-            this.updateBalance();
+            if (list.length) {
+                this.updateBalance();
+            }
         });
         this.dataService.accountList.subscribe(list => this.accountList = list);
     }
 
     updateBalance() {
-        let bbt = [] as number[][];
+        let bbt = [] as string[][];
         let week_range = this.getCurrentWeekDateRange();
+        let bt = [] as string[];
         for (let day of week_range) {
-            let bt = [] as number[];
-            bt.push(this.getDaysBalance(day));
-            bt.push(this.getDaysBudget(day));
-            bbt.push(bt);
+            bt.push(this.getDaysBalance(day).toString());
         }
+        bbt.push(bt);
+        bt = [] as string[];
+        for (let day of week_range) {
+            bt.push(this.getDaysBudget(day).toString());
+        }
+        bbt.push(bt);
+        console.log('update balance in service');
+        console.log(bbt);
         this.balanceWeekSource.next(bbt);
         this.buildWeekarray();
     }
