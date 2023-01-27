@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { format, parseISO } from 'date-fns';
 import { DataService } from '../services/data.service';
-import { category, transaction, reduceTransaction, filterTransaction } from './transaction.interface';
+import { category, transaction, reduceTransaction, filterTransaction, subscriptionContainer } from './transaction.interface';
 
 const ms2UnixDate = 86400000;
 
@@ -32,28 +32,34 @@ export class StatisticsService {
         private dataService: DataService
     ) { 
         this.init();
+        this.dataService.trackMe();
     }
 
+    subs : subscriptionContainer = new subscriptionContainer();
     init() {
-        this.dataService.transactionList.subscribe(list => {
-            this.transactionList = list;
-            if (list.length) {
-                this.updateBalance();
-            }
-        });
-        this.dataService.expenseCategoryList.subscribe(list => {
-            this.expenseCategoryList = list;
-            if (list.length) {
-                this.updateBalance();
-            }
-        });
-        this.dataService.incomeCategoryList.subscribe(list => {
-            this.incomeCategoryList = list;
-            if (list.length) {
-                this.updateBalance();
-            }
-        });
-        this.dataService.accountList.subscribe(list => this.accountList = list);
+        this.subs.add = this.dataService.transactionList.subscribe(list => {
+                this.transactionList = list;
+                if (list.length) {
+                    this.updateBalance();
+                }
+            });
+        this.subs.add = this.dataService.expenseCategoryList.subscribe(list => {
+                this.expenseCategoryList = list;
+                if (list.length) {
+                    this.updateBalance();
+                }
+            });
+        this.subs.add = this.dataService.incomeCategoryList.subscribe(list => {
+                this.incomeCategoryList = list;
+                if (list.length) {
+                    this.updateBalance();
+                }
+            });
+        this.subs.add = this.dataService.accountList.subscribe(list => this.accountList = list);
+    }
+
+    cleanUp() {
+        this.subs.unsubscribe();
     }
 
     updateBalance() {

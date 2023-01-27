@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DataService } from '../services/data.service';
 import { format, parseISO } from 'date-fns';
-import { category } from '../services/transaction.interface';
+import { category, subscriptionContainer } from '../services/transaction.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-tab3',
@@ -17,13 +18,21 @@ export class Tab3Page {
     constructor(
         private dataService: DataService,
         private formBuilder: FormBuilder
-    ) { }
+    ) { 
+        this.dataService.trackMe();
+    }
 
-    ngOnInit() {
-        console.log('ngOnInit tab3');
-        this.dataService.expenseCategoryList.subscribe(list => this.expenseCategoryList = list);
-        this.dataService.incomeCategoryList.subscribe(list => this.incomeCategoryList = list);
-        this.dataService.accountList.subscribe(list => this.accountList = list);
+    subs : subscriptionContainer = new subscriptionContainer();
+    ionViewDidEnter() {
+        console.log('ionViewDidEnter tab3');
+        this.subs.add = this.dataService.expenseCategoryList.subscribe(list => this.expenseCategoryList = list);
+        this.subs.add = this.dataService.incomeCategoryList.subscribe(list => this.incomeCategoryList = list);
+        this.subs.add = this.dataService.accountList.subscribe(list => this.accountList = list);
+    }
+
+    ionViewWillLeave() {
+        console.log('ionViewWillLeave tab3');
+        this.subs.unsubscribe();
     }
 
     color ='';

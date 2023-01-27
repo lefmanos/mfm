@@ -1,3 +1,4 @@
+import { Subscription } from "rxjs";
 
 export interface transaction {
     date: string;
@@ -10,6 +11,18 @@ export interface transaction {
 export interface category {
     name: string;
     color: string;
+}
+
+export class subscriptionContainer {
+    private subscriptions : Subscription[] = [];
+
+    set add(sub: Subscription) {
+        this.subscriptions.push(sub);
+    }
+
+    unsubscribe() {
+        this.subscriptions.forEach(s => s.unsubscribe());
+    }
 }
 
 export interface ui_info {

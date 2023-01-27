@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { StatisticsService } from '../services/statistics.service';
-import { transaction, category, ui_info } from '../services/transaction.interface'
+import { transaction, category, ui_info, subscriptionContainer } from '../services/transaction.interface'
 
 
 @Component({
@@ -27,17 +27,26 @@ export class Tab2Page {
     constructor(
         private dataService: DataService,
         private stats: StatisticsService
-    ) { }
+    ) { 
+        this.dataService.trackMe();
+    }
 
-    async ngOnInit(){
-        console.log('ngOnInit tab2');
-        this.stats.balanceWeekArray.subscribe(list => this.weekBalance = list);
-        this.stats.weekArrayIncome.subscribe(list => this.weekArrayIncome = list);
-        this.stats.weekArrayExpenses.subscribe(list => this.weekArrayExpenses = list);
-        this.dataService.transactionList.subscribe(list => { this.transactionList = list; });
-        this.dataService.expenseCategoryList.subscribe(list => { this.expenseCategoryList = list; });
-        this.dataService.incomeCategoryList.subscribe(list => { this.incomeCategoryList = list; });
+    subs : subscriptionContainer = new subscriptionContainer();
+    async ionViewDidEnter(){
+        console.log('ionViewDidEnter tab2');
+        this.subs.add = this.stats.balanceWeekArray.subscribe(list => this.weekBalance = list);
+        this.subs.add = this.stats.weekArrayIncome.subscribe(list => this.weekArrayIncome = list);
+        this.subs.add = this.stats.weekArrayExpenses.subscribe(list => this.weekArrayExpenses = list);
+        this.subs.add = this.dataService.transactionList.subscribe(list => { this.transactionList = list; });
+        this.subs.add = this.dataService.expenseCategoryList.subscribe(list => { this.expenseCategoryList = list; });
+        this.subs.add = this.dataService.incomeCategoryList.subscribe(list => { this.incomeCategoryList = list; });
         this.updateUIData();
+    }
+
+    ionViewWillLeave() {
+        console.log('ionViewWillLeave tab2');
+        this.subs.unsubscribe();
+        this.stats.cleanUp();
     }
 
     private updateUIData() {

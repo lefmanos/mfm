@@ -6,7 +6,7 @@ import { BehaviorSubject, from, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { filter } from 'rxjs/operators';
 import { take } from 'rxjs/operators';
-import { category, transaction, compareTransaction } from './transaction.interface';
+import { category, transaction, compareTransaction, subscriptionContainer } from './transaction.interface';
 
 const TRANSACTIONS = 'transactions'
 const EXPENSECAT = 'expence_categories'
@@ -34,6 +34,14 @@ export class DataService {
         console.log('Data Service construction return');
     }
 
+    subscribers = 0;
+    trackMe() {
+        this.subscribers++;
+        console.log('New subscriber. '+ this.subscribers.toString());
+    }
+
+    // TODO: unsubscripbe
+    subs : subscriptionContainer = new subscriptionContainer();
     async init() {
         console.log('Data Service async init function');
         await this.storage.defineDriver(CordovaSQLiteDriver);
@@ -94,7 +102,7 @@ export class DataService {
     }
 
     private loadAccounts() {
-        this.getData(ACCOUNTS).subscribe(res => {
+        this.subs.add = this.getData(ACCOUNTS).subscribe(res => {
             console.log('loading accounts');
             console.log(res);
             if (res == null) {
@@ -106,7 +114,7 @@ export class DataService {
         });
     }
     private loadTransactions() {
-        this.getData(TRANSACTIONS).subscribe(res => {
+        this.subs.add = this.getData(TRANSACTIONS).subscribe(res => {
             if (res != null) {
                 res.sort(compareTransaction);
             }
@@ -115,7 +123,7 @@ export class DataService {
     }
 
     private loadCategories() {
-        this.getData(EXPENSECAT).subscribe(res => {
+        this.subs.add = this.getData(EXPENSECAT).subscribe(res => {
             console.log('loading categories');
             console.log(res);
             if (res == null) {
@@ -129,7 +137,7 @@ export class DataService {
             }
             this.expenseCategorySource.next(res);
         });
-        this.getData(INCOMECAT).subscribe(res => {
+        this.subs.add = this.getData(INCOMECAT).subscribe(res => {
             console.log('loading categories')
             console.log(res);
             if (res == null) {

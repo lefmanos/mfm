@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { DataService } from '../services/data.service';
 import { take, tap } from 'rxjs/operators';
 import { format, parseISO } from 'date-fns';
-import { transaction, category } from '../services/transaction.interface'
+import { transaction, category, subscriptionContainer } from '../services/transaction.interface'
 
 @Component({
     selector: 'app-tab1',
@@ -24,6 +24,7 @@ export class Tab1Page {
         private formBuilder: FormBuilder
     ) { 
         console.log('tab1 constructor');
+        this.dataService.trackMe();
 
     }
     
@@ -35,59 +36,65 @@ export class Tab1Page {
         notes: ['']
     });
 
-    async ngOnInit(){
-        console.log('ngOnInit tab1');
-        this.dataService.expenseCategoryList.subscribe(list => {
-            this.expenseCategoryList = list;
-            if (this.initData[0]) {
-                return;
-            }
-            if (!this.expenseCategoryList.length) {
-                return;
-            }
-            console.log('-->expense init subscription initialized');
-            console.log(list);
-            this.initSema = this.initSema + 1;
-            this.initData[0]=true;
-            if (this.initSema == 3) {
-                this.resetForm();
-            }
-        });
-        this.dataService.incomeCategoryList.subscribe(list => {
-            this.incomeCategoryList = list;
-            if (this.initData[1]) {
-                return;
-            }
-            if (!this.incomeCategoryList.length) {
-                return;
-            }
-            console.log('-->income init subscription initialized');
-            console.log(list);
-            this.initSema = this.initSema + 1;
-            this.initData[1]=true;
-            if (this.initSema == 3) {
-                this.resetForm();
-            }
-        });
-        this.dataService.accountList.subscribe(list => {
-            this.accountList = list;
-            if (this.initData[2]) {
-                return;
-            }
-            if (!this.accountList.length) {
-                return;
-            }
-            console.log('-->accounts init subscription initialized');
-            console.log(list);
-            this.initSema = this.initSema + 1;
-            this.initData[2]=true;
-            if (this.initSema == 3) {
-                this.resetForm();
-            }
-        });
+    subs : subscriptionContainer = new subscriptionContainer();
+    async ionViewDidEnter(){
+        console.log('ionViewDidEnter tab1');
+        this.subs.add = this.dataService.expenseCategoryList.subscribe(list => {
+                this.expenseCategoryList = list;
+                if (this.initData[0]) {
+                    return;
+                }
+                if (!this.expenseCategoryList.length) {
+                    return;
+                }
+                console.log('-->expense init subscription initialized');
+                console.log(list);
+                this.initSema = this.initSema + 1;
+                this.initData[0]=true;
+                if (this.initSema == 3) {
+                    this.resetForm();
+                }
+            });
+        this.subs.add = this.dataService.incomeCategoryList.subscribe(list => {
+                this.incomeCategoryList = list;
+                if (this.initData[1]) {
+                    return;
+                }
+                if (!this.incomeCategoryList.length) {
+                    return;
+                }
+                console.log('-->income init subscription initialized');
+                console.log(list);
+                this.initSema = this.initSema + 1;
+                this.initData[1]=true;
+                if (this.initSema == 3) {
+                    this.resetForm();
+                }
+            });
+        this.subs.add = this.dataService.accountList.subscribe(list => {
+                this.accountList = list;
+                if (this.initData[2]) {
+                    return;
+                }
+                if (!this.accountList.length) {
+                    return;
+                }
+                console.log('-->accounts init subscription initialized');
+                console.log(list);
+                this.initSema = this.initSema + 1;
+                this.initData[2]=true;
+                if (this.initSema == 3) {
+                    this.resetForm();
+                }
+            });
         console.log('tab1 ngOnInit done subscribing');
         // this.dataService.expenseCategoryList.pipe( take(1));
         // this.resetForm();
+    }
+
+    ionViewWillLeave() {
+        console.log('ionViewWillLeave tab1');
+        this.subs.unsubscribe();
     }
 
     async resetForm() {
@@ -97,7 +104,7 @@ export class Tab1Page {
             console.log('gotcha!');
             this.dataService.expenseCategoryList.pipe( 
                 take(1), 
-                tap(v => { console.log('haha'); })
+                tap(_ => { console.log('haha'); })
             );
         }
         this.newTransactionForm.reset();
