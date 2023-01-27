@@ -13,9 +13,9 @@ const ms2UnixDate = 86400000;
 export class StatisticsService {
 
     private balanceSource = new BehaviorSubject({});
-    balanceWeekSource = new BehaviorSubject([] as string[][]);
-    weekExpensesSource = new BehaviorSubject([] as string[][]);
-    weekIncomeSource  = new BehaviorSubject([] as string[][]);
+    private balanceWeekSource = new BehaviorSubject([] as string[][]);
+    private weekExpensesSource = new BehaviorSubject([] as string[][]);
+    private weekIncomeSource  = new BehaviorSubject([] as string[][]);
 
     weekArrayExpenses = this.weekExpensesSource.asObservable();
     weekArrayIncome = this.weekIncomeSource.asObservable();
@@ -28,6 +28,7 @@ export class StatisticsService {
     expenseCategoryList : category[] = [];
     incomeCategoryList : category[] = [];
 
+    currentWeekViewOffset : number = 0;
     constructor(
         private dataService: DataService
     ) { 
@@ -64,7 +65,7 @@ export class StatisticsService {
 
     updateBalance() {
         let bbt = [] as string[][];
-        let week_range = this.getCurrentWeekDateRange();
+        let week_range = this.getCurrentWeekViewDateRange();
         let bt = [] as string[];
         for (let day of week_range) {
             bt.push(this.getDaysBalance(day).toFixed(2));
@@ -84,9 +85,9 @@ export class StatisticsService {
     private buildWeekarray() {
         let weekArray : string[][] = [];
 
+        let week_range = this.getCurrentWeekDateRange();
         for (let cat of this.expenseCategoryList) {
             let weekLine : string[] = [];
-            let week_range = this.getCurrentWeekDateRange();
             weekLine.push(cat['color']);
             weekLine.push(cat['name']);
             for (let day of week_range) {
@@ -98,7 +99,6 @@ export class StatisticsService {
         weekArray = [];
         for (let cat of this.incomeCategoryList) {
             let weekLine : string[] = [];
-            let week_range = this.getCurrentWeekDateRange();
             weekLine.push(cat['color']);
             weekLine.push(cat['name']);
             for (let day of week_range) {
@@ -126,11 +126,23 @@ export class StatisticsService {
         return tr.reduce(reduceTransaction, 0);
     }
 
-    getCurrentWeekDateRange() {
+    getCurrentWeekViewDateRange() {
         let d = this.getCurrentWeekDay();
         let weekRange = [];
         for (let i=1; i<=7; i++) {
-            weekRange.push(this.getFormatedDay(i-d));
+            let offset = 7*this.currentWeekViewOffset;
+            weekRange.push(this.getFormatedDay(i-d + offset));
+        }
+        return weekRange;
+    }
+
+    // TODO finish functionality
+    getCurrentMonthViewDateRange() {
+        let d = this.getCurrentWeekDay();
+        let weekRange = [];
+        for (let i=1; i<=7; i++) {
+            let offset = 7*this.currentWeekViewOffset;
+            weekRange.push(this.getFormatedDay(i-d + offset));
         }
         return weekRange;
     }
