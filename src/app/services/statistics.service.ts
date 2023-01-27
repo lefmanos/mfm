@@ -67,12 +67,12 @@ export class StatisticsService {
         let week_range = this.getCurrentWeekDateRange();
         let bt = [] as string[];
         for (let day of week_range) {
-            bt.push(this.getDaysBalance(day).toString());
+            bt.push(this.getDaysBalance(day).toFixed(2));
         }
         bbt.push(bt);
         bt = [] as string[];
         for (let day of week_range) {
-            bt.push(this.getDaysBudget(day).toString());
+            bt.push(this.getDaysBudget(day).toFixed(2));
         }
         bbt.push(bt);
         console.log('update balance in service');
@@ -90,7 +90,7 @@ export class StatisticsService {
             weekLine.push(cat['color']);
             weekLine.push(cat['name']);
             for (let day of week_range) {
-                weekLine.push(this.getCategoryDaysBalance(cat['name'], day).toString());
+                weekLine.push(this.getCategoryDaysBalance(cat['name'], day).toFixed(2));
             }
             weekArray.push(weekLine);
         }
@@ -102,7 +102,7 @@ export class StatisticsService {
             weekLine.push(cat['color']);
             weekLine.push(cat['name']);
             for (let day of week_range) {
-                weekLine.push(this.getCategoryDaysBalance(cat['name'], day).toString());
+                weekLine.push(this.getCategoryDaysBalance(cat['name'], day).toFixed(2));
             }
             weekArray.push(weekLine);
         }
