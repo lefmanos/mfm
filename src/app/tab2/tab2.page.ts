@@ -46,6 +46,9 @@ export class Tab2Page {
     ionViewWillLeave() {
         console.log('ionViewWillLeave tab2');
         this.subs.unsubscribe();
+    }
+
+    ngOnDestroy() {
         this.stats.cleanUp();
     }
 
