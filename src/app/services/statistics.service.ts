@@ -14,14 +14,15 @@ export class StatisticsService {
 
     private balanceSource = new BehaviorSubject({});
     private balanceWeekSource = new BehaviorSubject([] as string[][]);
+    private balanceMonthSource = new BehaviorSubject([] as string[][]);
     private weekExpensesSource = new BehaviorSubject([] as string[][]);
     private weekIncomeSource  = new BehaviorSubject([] as string[][]);
 
     weekArrayExpenses = this.weekExpensesSource.asObservable();
     weekArrayIncome = this.weekIncomeSource.asObservable();
-
     balance = this.balanceSource.asObservable();
     balanceWeekArray = this.balanceWeekSource.asObservable();
+    balanceMonthArray = this.balanceMonthSource.asObservable();
 
     transactionList: transaction[] = [];
     accountList: string[] = [];
@@ -29,6 +30,7 @@ export class StatisticsService {
     incomeCategoryList : category[] = [];
 
     currentWeekViewOffset : number = 0;
+    currentMonthViewOffset : number = 0;
     constructor(
         private dataService: DataService
     ) { 
@@ -85,7 +87,7 @@ export class StatisticsService {
     private buildWeekarray() {
         let weekArray : string[][] = [];
 
-        let week_range = this.getCurrentWeekDateRange();
+        let week_range = this.getCurrentWeekViewDateRange();
         for (let cat of this.expenseCategoryList) {
             let weekLine : string[] = [];
             weekLine.push(cat['color']);
@@ -107,6 +109,22 @@ export class StatisticsService {
             weekArray.push(weekLine);
         }
         this.weekIncomeSource.next(weekArray);
+    }
+
+    private buildMontharray() {
+        let monthArray : string[][] = [];
+
+        let month_range = this.getCurrentMonthViewDateRange();
+        for (let week of month_range) {
+            let weekLine : string[] = [];
+            weekLine.push('000000');
+            weekLine.push('');
+            for (let day of week) {
+                weekLine.push(this.getDaysBalance(day).toFixed(2));
+            }
+            monthArray.push(weekLine);
+        }
+        this.weekExpensesSource.next(monthArray);
     }
 
     getDaysBalance(untilDate: string) {
@@ -137,18 +155,45 @@ export class StatisticsService {
     }
 
     // TODO finish functionality
-    getCurrentMonthViewDateRange() {
+    getCurrentMonthViewDateRange(): string[][] {
+        let m = this.getCurrentMonth();
         let d = this.getCurrentWeekDay();
+        let dm = this.getCurrentMonthDay();
         let weekRange = [];
-        for (let i=1; i<=7; i++) {
-            let offset = 7*this.currentWeekViewOffset;
-            weekRange.push(this.getFormatedDay(i-d + offset));
+        let monthRange :string[][]= [][7];
+
+        let week_offset = 0;
+        while (d - dm > 1) {
+            for (let i=1; i<=7; i++) {
+                let offset = 7*week_offset;
+                weekRange.push(this.getFormatedDay(i-d + offset));
+            }
+            monthRange.push(weekRange);
+            dm -= 7;
         }
-        return weekRange;
+        monthRange.reverse();
+        dm = this.getCurrentMonthDay() + 7;
+        while (d - dm < 32) {
+            for (let i=1; i<=7; i++) {
+                let offset = 7*week_offset;
+                weekRange.push(this.getFormatedDay(i-d + offset));
+            }
+            monthRange.push(weekRange);
+            dm += 7;
+        }
+        return monthRange;
     }
 
     getCurrentWeekDay(): number {
         return (new Date(Date.now())).getDay();
+    }
+
+    getCurrentMonthDay(): number {
+        return (new Date(Date.now())).getDate();
+    }
+
+    getCurrentMonth(): number {
+        return (new Date(Date.now())).getMonth();
     }
 
     private getFormatedDay(dayOffset: number = 0) : string{
