@@ -104,19 +104,9 @@ export class StatisticsService {
         let weekArray : string[][] = [];
 
         let week_range = this.getCurrentWeekViewDateRange();
-        for (let cat of this.expenseCategoryList) {
-            let weekLine : string[] = [];
-            weekLine.push(cat['color']);
-            weekLine.push(cat['name']);
-            for (let day of week_range) {
-                weekLine.push(this.getCategoryDaysBalance(cat['name'], day).toFixed(2));
-            }
-            weekArray.push(weekLine);
-        }
-        console.log(weekArray);
-        this.weekExpensesSource.next(weekArray);
-        weekArray = [];
+        let incomeCatNames: string[] = [];
         for (let cat of this.incomeCategoryList) {
+            incomeCatNames.push(cat['name']);
             let weekLine : string[] = [];
             weekLine.push(cat['color']);
             weekLine.push(cat['name']);
@@ -127,6 +117,19 @@ export class StatisticsService {
         }
         console.log(weekArray);
         this.weekIncomeSource.next(weekArray);
+        weekArray = [];
+        let expenseCategories = this.expenseCategoryList.filter(value => !incomeCatNames.includes(value['name']));
+        for (let cat of expenseCategories) {
+            let weekLine : string[] = [];
+            weekLine.push(cat['color']);
+            weekLine.push(cat['name']);
+            for (let day of week_range) {
+                weekLine.push(this.getCategoryDaysBalance(cat['name'], day).toFixed(2));
+            }
+            weekArray.push(weekLine);
+        }
+        console.log(weekArray);
+        this.weekExpensesSource.next(weekArray);
     }
 
     private buildMontharray() {
