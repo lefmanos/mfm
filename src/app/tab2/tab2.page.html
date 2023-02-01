@@ -36,6 +36,22 @@
                 </ion-col>
             </ion-row>
 
+            <ion-row>
+                <ion-col>
+                </ion-col>
+                <ion-col>
+                <ion-fab-button (click)="this.stats.changeWeekViewOffset(false)" color="secondary">
+                    <ion-icon name="chevron-back" size="small"></ion-icon>
+                </ion-fab-button>
+                </ion-col>
+
+                <ion-col>
+                <ion-fab-button (click)="this.stats.changeWeekViewOffset()" position="end" color="secondary">
+                    <ion-icon name="chevron-forward" size="small"></ion-icon>
+                </ion-fab-button>
+                </ion-col>
+            </ion-row>
+
             <ion-row *ngFor="let row of weekBalance; let i = index">
                 <ion-col size=2>
                     <ion-badge [style.--background]="balanceColor">
@@ -52,10 +68,6 @@
                         </ng-container>
                     </ng-template>
                 </ion-col>
-            </ion-row>
-
-            <ion-row>
-                <ion-label> Details </ion-label>
             </ion-row>
 
             <ion-row *ngFor="let row of weekArrayExpenses" >

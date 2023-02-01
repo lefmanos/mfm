@@ -26,7 +26,7 @@ export class Tab2Page {
     balanceColor = "deaf42";
     constructor(
         private dataService: DataService,
-        private stats: StatisticsService
+        public stats: StatisticsService
     ) { 
         this.dataService.trackMe();
     }
@@ -55,7 +55,7 @@ export class Tab2Page {
     private updateUIData() {
         this.ui['weekDay'] = this.stats.getCurrentWeekDay();
         this.ui['isCurrentDate'] = true;
-        this.ui['weekRange'] = this.stats.getCurrentWeekDateRange();
+        this.ui['weekRange'] = this.stats.getCurrentWeekViewDateRange();
     }
 
     printSum() {

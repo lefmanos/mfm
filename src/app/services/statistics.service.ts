@@ -31,6 +31,7 @@ export class StatisticsService {
 
     currentWeekViewOffset : number = 0;
     currentMonthViewOffset : number = 0;
+
     constructor(
         private dataService: DataService
     ) { 
@@ -63,6 +64,14 @@ export class StatisticsService {
 
     cleanUp() {
         this.subs.unsubscribe();
+    }
+
+    changeWeekViewOffset(forward: boolean = true) {
+        console.log('Change offset');
+        let offset = this.currentWeekViewOffset;
+        this.currentWeekViewOffset = forward ? offset + 1 : offset - 1;
+        console.log(this.currentWeekViewOffset);
+        this.updateBalance();
     }
 
     updateBalance() {
@@ -118,7 +127,7 @@ export class StatisticsService {
         for (let week of month_range) {
             let weekLine : string[] = [];
             weekLine.push('000000');
-            weekLine.push('');
+            weekLine.push(week[0]);
             for (let day of week) {
                 weekLine.push(this.getDaysBalance(day).toFixed(2));
             }
