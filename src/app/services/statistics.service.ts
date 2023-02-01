@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { format, parseISO } from 'date-fns';
 import { DataService } from '../services/data.service';
 import { category, transaction, reduceTransaction, filterTransaction, subscriptionContainer } from './transaction.interface';
+import { isRegExp } from 'util';
 
 const ms2UnixDate = 86400000;
 
@@ -12,17 +13,13 @@ const ms2UnixDate = 86400000;
 
 export class StatisticsService {
 
-    private balanceSource = new BehaviorSubject({});
-    private balanceWeekSource = new BehaviorSubject([] as string[][]);
-    private balanceMonthSource = new BehaviorSubject([] as string[][]);
+    private balanceViewSource = new BehaviorSubject([] as string[][]);
     private weekExpensesSource = new BehaviorSubject([] as string[][]);
     private weekIncomeSource  = new BehaviorSubject([] as string[][]);
 
     weekArrayExpenses = this.weekExpensesSource.asObservable();
     weekArrayIncome = this.weekIncomeSource.asObservable();
-    balance = this.balanceSource.asObservable();
-    balanceWeekArray = this.balanceWeekSource.asObservable();
-    balanceMonthArray = this.balanceMonthSource.asObservable();
+    balanceViewArray = this.balanceViewSource.asObservable();
 
     transactionList: transaction[] = [];
     accountList: string[] = [];
@@ -32,6 +29,7 @@ export class StatisticsService {
     currentWeekViewOffset : number = 0;
     currentMonthViewOffset : number = 0;
 
+    private isReady = 3;
     constructor(
         private dataService: DataService
     ) { 
@@ -43,20 +41,29 @@ export class StatisticsService {
     init() {
         this.subs.add = this.dataService.transactionList.subscribe(list => {
                 this.transactionList = list;
-                if (list.length) {
-                    this.updateBalance();
+                if (list != null && list.length) {
+                    this.isReady--;
+                    if (this.isReady == 0) {
+                        this.updateBalance();
+                    }
                 }
             });
         this.subs.add = this.dataService.expenseCategoryList.subscribe(list => {
                 this.expenseCategoryList = list;
-                if (list.length) {
-                    this.updateBalance();
+                if (list != null && list.length) {
+                    this.isReady--;
+                    if (this.isReady == 0) {
+                        this.updateBalance();
+                    }
                 }
             });
         this.subs.add = this.dataService.incomeCategoryList.subscribe(list => {
                 this.incomeCategoryList = list;
-                if (list.length) {
-                    this.updateBalance();
+                if (list != null && list.length) {
+                    this.isReady--;
+                    if (this.isReady == 0) {
+                        this.updateBalance();
+                    }
                 }
             });
         this.subs.add = this.dataService.accountList.subscribe(list => this.accountList = list);
@@ -89,7 +96,7 @@ export class StatisticsService {
         bbt.push(bt);
         console.log('update balance in service');
         console.log(bbt);
-        this.balanceWeekSource.next(bbt);
+        this.balanceViewSource.next(bbt);
         this.buildWeekarray();
     }
 
@@ -106,6 +113,7 @@ export class StatisticsService {
             }
             weekArray.push(weekLine);
         }
+        console.log(weekArray);
         this.weekExpensesSource.next(weekArray);
         weekArray = [];
         for (let cat of this.incomeCategoryList) {
@@ -117,6 +125,7 @@ export class StatisticsService {
             }
             weekArray.push(weekLine);
         }
+        console.log(weekArray);
         this.weekIncomeSource.next(weekArray);
     }
 
@@ -165,14 +174,13 @@ export class StatisticsService {
 
     // TODO finish functionality
     getCurrentMonthViewDateRange(): string[][] {
-        let m = this.getCurrentMonth();
         let d = this.getCurrentWeekDay();
         let dm = this.getCurrentMonthDay();
-        let weekRange = [];
         let monthRange :string[][]= [][7];
 
         let week_offset = 0;
         while (d - dm > 1) {
+            let weekRange = [];
             for (let i=1; i<=7; i++) {
                 let offset = 7*week_offset;
                 weekRange.push(this.getFormatedDay(i-d + offset));
@@ -183,6 +191,7 @@ export class StatisticsService {
         monthRange.reverse();
         dm = this.getCurrentMonthDay() + 7;
         while (d - dm < 32) {
+            let weekRange = [];
             for (let i=1; i<=7; i++) {
                 let offset = 7*week_offset;
                 weekRange.push(this.getFormatedDay(i-d + offset));

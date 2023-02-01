@@ -34,7 +34,7 @@ export class Tab2Page {
     subs : subscriptionContainer = new subscriptionContainer();
     async ionViewDidEnter(){
         console.log('ionViewDidEnter tab2');
-        this.subs.add = this.stats.balanceWeekArray.subscribe(list => this.weekBalance = list);
+        this.subs.add = this.stats.balanceViewArray.subscribe(list => this.weekBalance = list);
         this.subs.add = this.stats.weekArrayIncome.subscribe(list => this.weekArrayIncome = list);
         this.subs.add = this.stats.weekArrayExpenses.subscribe(list => this.weekArrayExpenses = list);
         this.subs.add = this.dataService.transactionList.subscribe(list => { this.transactionList = list; });
