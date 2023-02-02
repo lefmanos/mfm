@@ -16,10 +16,12 @@ export class StatisticsService {
     private balanceViewSource = new BehaviorSubject([] as string[][]);
     private weekExpensesSource = new BehaviorSubject([] as string[][]);
     private weekIncomeSource  = new BehaviorSubject([] as string[][]);
+    private globalDateInfoSource = new BehaviorSubject("" as string);
 
     weekArrayExpenses = this.weekExpensesSource.asObservable();
     weekArrayIncome = this.weekIncomeSource.asObservable();
     balanceViewArray = this.balanceViewSource.asObservable();
+    globalDateInfo = this.globalDateInfoSource.asObservable();
 
     transactionList: transaction[] = [];
     accountList: string[] = [];
@@ -104,6 +106,7 @@ export class StatisticsService {
         let weekArray : string[][] = [];
 
         let week_range = this.getCurrentWeekViewDateRange();
+        this.globalDateInfoSource.next(`${week_range[0].slice(8)}/${week_range[0].slice(5,-3)} ${week_range[6].slice(8)}/${week_range[6].slice(5,-3)}`);
         let incomeCatNames: string[] = [];
         for (let cat of this.incomeCategoryList) {
             incomeCatNames.push(cat['name']);

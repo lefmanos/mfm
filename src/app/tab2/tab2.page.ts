@@ -22,6 +22,7 @@ export class Tab2Page {
     weekArrayExpenses : string[][] = [];
     weekArrayIncome : string[][] = [];
     weekBalance : string[][] = [];
+    dateInfo = "";
 
     balanceColor = "deaf42";
     constructor(
@@ -37,6 +38,7 @@ export class Tab2Page {
         this.subs.add = this.stats.balanceViewArray.subscribe(list => this.weekBalance = list);
         this.subs.add = this.stats.weekArrayIncome.subscribe(list => this.weekArrayIncome = list);
         this.subs.add = this.stats.weekArrayExpenses.subscribe(list => this.weekArrayExpenses = list);
+        this.subs.add = this.stats.globalDateInfo.subscribe(date => this.dateInfo = date);
         this.subs.add = this.dataService.transactionList.subscribe(list => { this.transactionList = list; });
         this.subs.add = this.dataService.expenseCategoryList.subscribe(list => { this.expenseCategoryList = list; });
         this.subs.add = this.dataService.incomeCategoryList.subscribe(list => { this.incomeCategoryList = list; });
