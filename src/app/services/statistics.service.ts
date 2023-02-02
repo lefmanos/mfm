@@ -31,7 +31,10 @@ export class StatisticsService {
     currentWeekViewOffset : number = 0;
     currentMonthViewOffset : number = 0;
 
-    private isReady = 3;
+    private isReadyCounter = 3;
+    private isReady1 = false;
+    private isReady2 = false;
+    private isReady3 = false;
     constructor(
         private dataService: DataService
     ) { 
@@ -44,29 +47,23 @@ export class StatisticsService {
         this.subs.add = this.dataService.transactionList.subscribe(list => {
                 this.transactionList = list;
                 if (list != null && list.length) {
-                    this.isReady--;
-                    if (this.isReady == 0) {
-                        this.updateBalance();
-                    }
+                    this.isReady1 = true;
                 }
+                this.updateBalance();
             });
         this.subs.add = this.dataService.expenseCategoryList.subscribe(list => {
                 this.expenseCategoryList = list;
                 if (list != null && list.length) {
-                    this.isReady--;
-                    if (this.isReady == 0) {
-                        this.updateBalance();
-                    }
+                    this.isReady2 = true;
                 }
+                this.updateBalance();
             });
         this.subs.add = this.dataService.incomeCategoryList.subscribe(list => {
                 this.incomeCategoryList = list;
                 if (list != null && list.length) {
-                    this.isReady--;
-                    if (this.isReady == 0) {
-                        this.updateBalance();
-                    }
+                    this.isReady3 = true;
                 }
+                this.updateBalance();
             });
         this.subs.add = this.dataService.accountList.subscribe(list => this.accountList = list);
     }
@@ -84,6 +81,16 @@ export class StatisticsService {
     }
 
     updateBalance() {
+        if (! this.isReady1) {
+            return;
+        }
+        if (! this.isReady2) {
+            return;
+        }
+        if (! this.isReady3) {
+            return;
+        }
+
         let bbt = [] as string[][];
         let week_range = this.getCurrentWeekViewDateRange();
         let bt = [] as string[];

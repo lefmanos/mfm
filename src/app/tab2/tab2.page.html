@@ -111,8 +111,9 @@
     </ion-grid>
 
     <!-- transaction history section -->
+    <!-- TODO: fix reverse here and change transaction observable maybe -->
     <ion-slides [options]="{ slidesPerView: '3.3', zoom: false, grabCursor: true }">
-                <ion-slide *ngFor="let item of transactionList.reverse(); let i = index">
+                <ion-slide *ngFor="let item of transactionList; let i = index">
                     <ion-card color="warning">
                         <ion-card-header>
                             <ion-card-title>{{ item["amount"] }}</ion-card-title>
