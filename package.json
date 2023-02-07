@@ -34,6 +34,7 @@
     "localforage-cordovasqlitedriver": "^1.8.0",
     "ngx-colors": "^3.1.4",
     "rxjs": "~7.5.0",
+    "swiper": "^9.0.3",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
