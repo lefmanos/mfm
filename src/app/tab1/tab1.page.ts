@@ -99,7 +99,6 @@ export class Tab1Page {
 
     async resetForm() {
         console.log('Reset form');
-        console.log(this.expenseCategoryList);
         if (!this.expenseCategoryList.length) {
             console.log('gotcha!');
             this.dataService.expenseCategoryList.pipe( 
@@ -107,26 +106,35 @@ export class Tab1Page {
                 tap(_ => { console.log('haha'); })
             );
         }
-        this.newTransactionForm.reset();
+        let newValue;
         let datenow = (new Date(Date.now())).toISOString();
         datenow = format(parseISO(datenow), 'yyyy-MM-dd');
-        if (this.addingExpense == "true") {
-            this.newTransactionForm.setValue ({
-                date: datenow,
-                category: this.expenseCategoryList[0]['name'],
-                account: this.accountList[0],
-                amount: 0,
-                notes: ''
-            });
+        if (this.newTransactionForm.status == 'VALID') {
+            newValue = {
+                date: this.newTransactionForm.value['date']!,
+                category: this.newTransactionForm.value['category']!,
+                account: this.newTransactionForm.value['account']!,
+                amount: this.newTransactionForm.value['amount']!,
+                notes: this.newTransactionForm.value['notes']!
+            }
         } else {
-            this.newTransactionForm.setValue ({
+            newValue = {
                 date: datenow,
-                category: this.incomeCategoryList[0]['name'],
+                category: "",
                 account: this.accountList[0],
                 amount: 0,
                 notes: ''
-            });
+            }
         }
+
+        this.newTransactionForm.reset();
+        if (this.addingExpense == "true") {
+            newValue['category'] = this.expenseCategoryList[0]['name'];
+        } else {
+            newValue['category'] = this.incomeCategoryList[0]['name'];
+        }
+
+        this.newTransactionForm.setValue(newValue);
 
     }
 
