@@ -111,7 +111,13 @@
     </ion-grid>
 
     <!-- transaction history section -->
-    <!-- TODO: fix reverse here and change transaction observable maybe -->
+    <ion-popover trigger="transactionClicked" triggerAction="click">
+        <ng-template>
+            <ion-button>
+                A Button
+            </ion-button>
+        </ng-template>
+    </ion-popover>
     <ion-slides [options]="{ slidesPerView: '3.3', zoom: false, grabCursor: true }">
                 <ion-slide *ngFor="let item of transactionList.slice().reverse(); let i = index">
                     <ion-card color="warning">
@@ -122,11 +128,11 @@
 
                         <ion-card-content>
                             {{ item["notes"]}}
-                            <ion-item-options side="end">
-                                <ion-item-option color="primary" (click)="removeTransaction(transactionList.length - i - 1)">
-                                    <ion-icon name="trash" slot="icon-only"></ion-icon>
-                                </ion-item-option>
-                            </ion-item-options>
+                            <!-- <ion-item-options side="end"> -->
+                            <!--     <ion-item-option color="primary" (click)="removeTransaction(transactionList.length - i - 1)"> -->
+                            <!--         <ion-icon name="trash" slot="icon-only"></ion-icon> -->
+                            <!--     </ion-item-option> -->
+                            <!-- </ion-item-options> -->
                         </ion-card-content>
                         <ion-button id="transactionClicked">
                             <ion-icon name="add" slot="icon-only"></ion-icon>
@@ -134,9 +140,4 @@
                     </ion-card>
                 </ion-slide>
     </ion-slides>
-    <ion-modal trigger="transactionClicked" triggerAction="click">
-        <ion-button>
-            A Button
-        </ion-button>
-    </ion-modal>
 </ion-content>
